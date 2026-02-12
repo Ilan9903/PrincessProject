@@ -23,12 +23,10 @@ Princess Project is a charming full-stack web application designed to create a s
 - **React Router DOM 7.13.0** - Client-side routing
 - **Tailwind CSS 4.1.18** - Utility-first CSS framework
 - **Axios 1.13.5** - HTTP client
-- **React Confetti 6.4.0** - Celebration animations
 
 ### Backend
 - **Node.js** with **Express 5.2.1** - Web server framework
 - **Firebase Admin 13.6.1** - Backend services and Firestore database
-- **CORS 2.8.6** - Cross-origin resource sharing
 
 ## 📁 Project Structure
 
