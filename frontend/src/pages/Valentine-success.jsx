@@ -1,4 +1,5 @@
 import { useLocation, Navigate, Link } from 'react-router-dom';
+import PageTransition from '../components/PageTransition';
 import Confetti from 'react-confetti';
 import { useState, useEffect } from 'react';
 import FloatingHearts from '../components/FloatingHearts';
@@ -22,6 +23,7 @@ const ValentineSuccess = () => {
       <head>
     <title>She said YES!</title>
     </head>
+    <PageTransition>
     <div className="fixed inset-0 bg-red-50 flex flex-col items-center justify-center p-4 text-center overflow-hidden font-['Playfair_Display']">
       <Confetti width={size.width} height={size.height} />
       <FloatingHearts />
@@ -35,6 +37,7 @@ const ValentineSuccess = () => {
             <Link to="/" className="group relative block bg-white/50 border border-pink-100 font-bold py-2 px-6 rounded-full hover:bg-white transition-colors font-sans overflow-hidden active:scale-95 transition-all duration-300 hover:border-red-300 hover:shadow-xl hover:shadow-red-200/40 text-gray-800 hover:text-red-600">← Acceuil</Link>      
         </div>
     </div>
+    </PageTransition>
     </>
   );
 };

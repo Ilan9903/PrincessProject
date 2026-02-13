@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import PageTransition from '../components/PageTransition';
 import axios from 'axios';
 import FloatingHearts from '../components/FloatingHearts';
 
@@ -43,6 +44,7 @@ const ValentineRequest = () => {
       <head>
     <title>Valentine</title>
     </head>
+    <PageTransition>
     <div className="fixed inset-0 bg-pink-100 flex flex-col items-center justify-center overflow-hidden font-['Playfair_Display']">
       <FloatingHearts />
       <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
@@ -55,6 +57,7 @@ const ValentineRequest = () => {
         </div>
       </div>
     </div>
+    </PageTransition>
     </>
   );
 };

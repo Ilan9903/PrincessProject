@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PageTransition from '../components/PageTransition';
 import { Link } from 'react-router-dom';
 import FloatingHearts from '../components/FloatingHearts';
 
@@ -87,6 +88,7 @@ const DateIdeas = () => {
   };
 
   return (
+    <PageTransition>
     <div className="fixed inset-0 bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display']">
       <FloatingHearts />
       
@@ -131,6 +133,7 @@ const DateIdeas = () => {
         </button>
       </div>
     </div>
+    </PageTransition>
   );
 };
 

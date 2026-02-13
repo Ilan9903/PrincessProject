@@ -121,7 +121,6 @@ Records the Valentine's Day response to Firestore
 
 - `/` - Home page
 - `/valentine` - Valentine's request page
-- `/success` - Success celebration page
 - `/date-ideas` - Date ideas page
 - `/open-when` - Open when letters page
 
