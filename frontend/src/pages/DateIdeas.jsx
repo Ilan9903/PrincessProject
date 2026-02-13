@@ -123,13 +123,11 @@ const DateIdeas = () => {
         <button 
           onClick={pickIdea}
           disabled={isAnimating}
-          className="mt-10 group relative px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden w-full md:w-auto hover:cursor-pointer"
+          className="mt-10 group relative px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full shadow-lg hover:-translate-y-1 transition-all active:scale-95 disabled:cursor-not-allowed overflow-hidden w-full md:w-auto hover:cursor-pointer"
         >
           <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
             {isAnimating ? 'Recherche en cours...' : '🎲 Trouver une idée'}
           </span>
-          {/* Effet de brillance au survol */}
-          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
         </button>
       </div>
     </div>

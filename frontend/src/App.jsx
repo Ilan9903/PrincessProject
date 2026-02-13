@@ -13,14 +13,15 @@ import InstallPrompt from './components/InstallPrompt'; // ✅ Le composant d'in
 import Login from './pages/Login';
 import Home from './pages/Home';
 import ValentineRequest from './pages/Valentine-request'; // J'ai remis le nom standard si ton fichier s'appelle Valentine.jsx
-import Success from './pages/Valentine-success';          // Idem pour Success.jsx
+import ValentineSuccess from './pages/Valentine-success';          // Idem pour Success.jsx
 import DateIdeas from './pages/DateIdeas';
 import OpenWhen from './pages/OpenWhen';
 import OurStory from './pages/OurStory';
 import Reasons from './pages/Reasons';
 import Coupons from './pages/Coupons';
 import Wheel from './pages/Wheel';
-import ValentineSuccess from './pages/Valentine-success';
+import Quiz from './pages/Quiz';
+import ScratchGame from './pages/ScratchGame';
 
 // --- GESTION DES ROUTES ANIMÉES ---
 // Ce composant s'occupe de vérifier la sécurité et de gérer les transitions
@@ -48,6 +49,8 @@ const AnimatedRoutes = ({ setIsAuthenticated }) => {
         <Route path="/reasons" element={<Reasons />} />
         <Route path="/coupons" element={<Coupons />} />
         <Route path="/wheel" element={<Wheel />} />
+        <Route path="/quiz" element={<Quiz />} />
+        <Route path="/scratch" element={<ScratchGame />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
 

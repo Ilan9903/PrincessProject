@@ -61,9 +61,7 @@ const Wheel = () => {
       <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-4 relative overflow-hidden font-['Playfair_Display']">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-pink-500 z-50 text-2xl bg-white/50 p-2 rounded-full backdrop-blur-sm">
-          🏠
-        </Link>
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
 
         <div className="text-center z-10 mb-8 mt-4">
           <h1 className="text-3xl font-bold text-gray-800">La Roue du Soir</h1>
@@ -119,7 +117,7 @@ const Wheel = () => {
           <button 
             onClick={spinWheel}
             disabled={spinning}
-            className={`mt-10 px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all active:scale-95 ${spinning ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-pink-500 to-rose-500 hover:shadow-pink-200/50 hover:-translate-y-1'}`}
+            className={`mt-10 px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all active:scale-95 ${spinning ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-pink-500 to-rose-500 hover:shadow-pink-200/50 hover:-translate-y-1 hover:cursor-pointer'}`}
           >
             {spinning ? 'Ça tourne... 🎡' : 'Lancer la roue !'}
           </button>
