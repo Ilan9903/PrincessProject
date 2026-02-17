@@ -5,31 +5,31 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import PageTransition from '../components/PageTransition';
 
+// --- 📅 CONFIGURATION DES SECRETS ---
+// Ajoute autant de couples image/texte que tu veux ici !
+const secrets = [
+  {
+    image: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=800", // Chat mignon
+    text: "Bon pour un massage ce soir ! ❤️"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800", // Coeur
+    text: "Ce soir, c'est moi qui cuisine ton plat préféré 🍝"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=800", // Fleurs
+    text: "Week-end surprise : prépare ta valise ! 🧳"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800", // Câlin
+    text: "Joker : Tu as gagné le droit de choisir le film ce soir 🎬"
+  }
+];
+
 const ScratchGame = () => {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [isRevealed, setIsRevealed] = useState(false);
-
-  // --- 📅 CONFIGURATION DES SECRETS ---
-  // Ajoute autant de couples image/texte que tu veux ici !
-  const secrets = [
-    {
-      image: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=800", // Chat mignon
-      text: "Bon pour un massage ce soir ! ❤️"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800", // Coeur
-      text: "Ce soir, c'est moi qui cuisine ton plat préféré 🍝"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=800", // Fleurs
-      text: "Week-end surprise : prépare ta valise ! 🧳"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800", // Câlin
-      text: "Joker : Tu as gagné le droit de choisir le film ce soir 🎬"
-    }
-  ];
 
   // --- LOGIQUE DU JOUR ---
   // On utilise useMemo pour que ça ne change pas si le composant se rafraîchit
@@ -154,7 +154,7 @@ const ScratchGame = () => {
         <p className="text-gray-500 mb-8 z-10">Gratte la carte pour découvrir ta surprise...</p>
 
         {/* --- ZONE DE JEU --- */}
-        <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl shadow-2xl overflow-hidden border-8 border-white bg-white">
+        <div className="relative w-full max-w-sm aspect-4/5 rounded-3xl shadow-2xl overflow-hidden border-8 border-white bg-white">
           
           {/* COUCHE DU DESSOUS (LE SECRET DU JOUR) */}
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-pink-100 p-6 text-center">

@@ -58,7 +58,7 @@ const Reasons = () => {
 
         {/* Contenu Principal */}
         <div className="z-10 text-center w-full max-w-md">
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-600 mb-8 animate-fade-in-up">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-red-400 to-pink-600 mb-8 animate-fade-in-up">
             Pourquoi je t'aime ?
           </h1>
           
@@ -71,7 +71,7 @@ const Reasons = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={showRandomReason}
-            className="w-40 h-40 bg-gradient-to-br hover:cursor-pointer from-red-400 to-pink-500 rounded-full shadow-2xl flex items-center justify-center mx-auto cursor-pointer border-4 border-white/50 relative group"
+            className="w-40 h-40 bg-linear-to-br hover:cursor-pointer from-red-400 to-pink-500 rounded-full shadow-2xl flex items-center justify-center mx-auto cursor-pointer border-4 border-white/50 relative group"
           >
             <span className="text-6xl filter drop-shadow-md group-hover:scale-110 transition-transform duration-300">💖</span>
             {/* Onde de choc animée */}

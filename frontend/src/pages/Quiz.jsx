@@ -116,7 +116,7 @@ const Quiz = () => {
             {/* CORRECTION ICI : Le fond de la barre est maintenant bg-pink-200 (au lieu de white) */}
             <div className="w-full bg-pink-200 rounded-full h-2.5 mb-8">
               <div 
-                className="bg-gradient-to-r from-pink-400 to-rose-500 h-2.5 rounded-full transition-all duration-500 ease-out" 
+                className="bg-linear-to-r from-pink-400 to-rose-500 h-2.5 rounded-full transition-all duration-500 ease-out" 
                 style={{ width: `${((currentQuestion) / questions.length) * 100}%` }}
               ></div>
             </div>
@@ -171,7 +171,7 @@ const Quiz = () => {
             className="text-center z-10 p-8 bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-200 max-w-sm"
           >
             <div className="text-6xl mb-4">🏆</div>
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-4">
+            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-purple-600 mb-4">
               100% Correct !
             </h2>
             <p className="text-gray-600 mb-8 leading-relaxed">
@@ -179,7 +179,7 @@ const Quiz = () => {
             </p>
             <Link 
               to="/coupons" 
-              className="inline-block px-8 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-bold shadow-lg hover:shadow-pink-300/50 hover:-translate-y-1 transition-all"
+              className="inline-block px-8 py-3 bg-linear-to-r from-pink-500 to-rose-500 text-white rounded-full font-bold shadow-lg hover:shadow-pink-300/50 hover:-translate-y-1 transition-all"
             >
               Réclamer ma récompense 🎁
             </Link>

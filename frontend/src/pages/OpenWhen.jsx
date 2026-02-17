@@ -71,7 +71,7 @@ const OpenWhen = () => {
         
         <div className="z-10 w-full max-w-2xl mt-12 mb-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 flex items-center justify-center gap-3 py-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-600 leading-normal">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-red-500 to-pink-600 leading-normal">
               Ouvrir quand...
             </span>
           </h1>
@@ -110,7 +110,7 @@ const OpenWhen = () => {
         {/* MODALE (LA LETTRE OUVERTE) */}
         <AnimatePresence>
           {selectedEnvelope && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
               
               {/* Fond sombre */}
               <motion.div 

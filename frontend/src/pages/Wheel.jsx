@@ -71,14 +71,14 @@ const Wheel = () => {
         <div className="relative z-10 flex flex-col items-center">
           
           {/* FLÈCHE (Pointeur) - Fixe en haut */}
-          <div className="absolute top-[-15px] z-20 drop-shadow-lg">
+          <div className="absolute -top-3.75 z-20 drop-shadow-lg">
              <div className="text-4xl text-pink-600">▼</div>
           </div>
 
           {/* LA ROUE */}
           <motion.div 
             animate={controls}
-            className="w-[300px] h-[300px] rounded-full border-[8px] border-white shadow-2xl relative overflow-hidden"
+            className="w-75 h-75 rounded-full border-8 border-white shadow-2xl relative overflow-hidden"
             style={{ 
                 // Dégradé conique calculé pour 6 segments
                 background: `conic-gradient(
@@ -117,7 +117,7 @@ const Wheel = () => {
           <button 
             onClick={spinWheel}
             disabled={spinning}
-            className={`mt-10 px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all active:scale-95 ${spinning ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-pink-500 to-rose-500 hover:shadow-pink-200/50 hover:-translate-y-1 hover:cursor-pointer'}`}
+            className={`mt-10 px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all active:scale-95 ${spinning ? 'bg-gray-400 cursor-not-allowed' : 'bg-linear-to-r from-pink-500 to-rose-500 hover:shadow-pink-200/50 hover:-translate-y-1 hover:cursor-pointer'}`}
           >
             {spinning ? 'Ça tourne... 🎡' : 'Lancer la roue !'}
           </button>
@@ -133,7 +133,7 @@ const Wheel = () => {
             <p className="text-gray-400 text-xs uppercase tracking-widest font-bold mb-2">Le verdict :</p>
             <h2 className="text-2xl font-bold">
               {/* Le texte coloré (tout sauf les 2 derniers caractères qui sont l'emoji et l'espace) */}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-purple-600">
                 {result.substring(0, result.length - 2)}
               </span>
               {/* L'emoji (les 2 derniers caractères) en couleur normale */}

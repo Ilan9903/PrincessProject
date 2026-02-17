@@ -26,7 +26,7 @@ const MusicPlayer = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-[90]">
+    <div className="fixed bottom-4 right-4 z-90">
       
       <audio ref={audioRef} src={songFile} loop />
 

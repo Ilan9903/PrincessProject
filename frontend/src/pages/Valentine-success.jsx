@@ -34,7 +34,7 @@ const ValentineSuccess = () => {
           <p className="text-lg text-gray-800 font-semibold mb-2">Tu es coincée avec moi !</p>
           <p className="text-sm text-gray-500 italic">(Rendez-vous le 14 Février ❤️)</p>
         </div>
-            <Link to="/" className="group relative block bg-white/50 border border-pink-100 font-bold py-2 px-6 rounded-full hover:bg-white transition-colors font-sans overflow-hidden active:scale-95 transition-all duration-300 hover:border-red-300 hover:shadow-xl hover:shadow-red-200/40 text-gray-800 hover:text-red-600">← Acceuil</Link>      
+            <Link to="/" className="group relative block bg-white/50 border border-pink-100 font-bold py-2 px-6 rounded-full hover:bg-white transition-colors font-sans overflow-hidden active:scale-95 duration-300 hover:border-red-300 hover:shadow-xl hover:shadow-red-200/40 text-gray-800 hover:text-red-600">← Acceuil</Link>      
         </div>
     </div>
     </PageTransition>

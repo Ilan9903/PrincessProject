@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <PageTransition>
       {/* CONTENEUR PRINCIPAL : Bloqué à la hauteur de l'écran (100dvh) */}
-      <div className="h-[100dvh] w-full bg-pink-50 flex flex-col items-center justify-between overflow-hidden relative font-['Playfair_Display']">
+      <div className="h-dvh w-full bg-pink-50 flex flex-col items-center justify-between overflow-hidden relative font-['Playfair_Display']">
         
         <FloatingHearts />
 
@@ -28,16 +28,16 @@ const Home = () => {
         
         {/* --- 1. EN-TÊTE (Titre + Photo) --- */}
         {/* flex-shrink-0 : Empêche cette partie d'être écrasée */}
-        <div className="flex flex-col items-center justify-center w-full max-w-md px-6 z-10 flex-shrink-0 mt-4">
+        <div className="flex flex-col items-center justify-center w-full max-w-md px-6 z-10 shrink-0 mt-4">
           <div className="text-center animate-fade-in-up">
-            <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-600 mb-2 drop-shadow-sm py-2 font-['Playfair_Display'] leading-none">
+            <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-linear-to-r from-red-500 to-pink-600 mb-2 drop-shadow-sm py-2 font-['Playfair_Display'] leading-none">
               Princess<br />Project
             </h1>
             
             <div className="flex items-center justify-center gap-4 mt-4 mb-2">
                 <p className="text-lg text-gray-600 italic font-serif">for my wife</p>
                 <div className="relative group cursor-default">
-                    <div className="absolute -inset-1 bg-gradient-to-tr from-pink-400 to-yellow-300 rounded-full blur-md opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
+                    <div className="absolute -inset-1 bg-linear-to-tr from-pink-400 to-yellow-300 rounded-full blur-md opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
                     <img
                       src={babawa}
                       alt="Ma princesse" 
@@ -50,12 +50,12 @@ const Home = () => {
 
         {/* --- 2. ZONE SCROLLABLE DES BOUTONS --- */}
         {/* flex-grow : Prend tout l'espace libre au milieu */}
-        <div className="w-full flex-grow flex flex-col justify-center overflow-hidden px-4 py-2 z-10 max-w-md">
+        <div className="w-full grow flex flex-col justify-center overflow-hidden px-4 py-2 z-10 max-w-md">
             
             {/* La liste scrollable elle-même */}
             <div className="w-full max-h-full overflow-y-auto px-2 py-4
                 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent scroll-smooth
-                [mask-image:linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]
+                mask-[linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]
                 webkit-[mask-image:linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]"
             >
           
@@ -71,7 +71,7 @@ const Home = () => {
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-red-400">→</div>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700 z-0"></div>
+                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-0"></div>
                 </Link>
 
                 {/* 2. Bouton Idée de Date */}
@@ -200,7 +200,7 @@ const Home = () => {
 
         {/* --- 3. PIED DE PAGE (Compteur + Crédits) --- */}
         {/* mb-20 pour laisser de la place au Lecteur Musique en bas */}
-        <div className="flex-shrink-0 pb-6 text-center z-10 w-full">
+        <div className="shrink-0 pb-6 text-center z-10 w-full">
             <RelationshipCounter />
             <div className="text-gray-400 text-xs font-sans mt-2">Développé avec ❤️ par ton chéri</div>
         </div>

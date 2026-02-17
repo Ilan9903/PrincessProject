@@ -33,7 +33,7 @@ const InstallPrompt = () => {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
-        className="fixed bottom-24 left-4 right-4 z-[100] bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-2 border-pink-200"
+        className="fixed bottom-24 left-4 right-4 z-100 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-2 border-pink-200"
       >
         <div className="flex items-start gap-4">
           <div className="text-3xl">📱</div>

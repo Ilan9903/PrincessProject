@@ -50,7 +50,7 @@ const OurStory = () => {
         
         {/* En-tête */}
         <div className="text-center mb-16 animate-fade-in-up">
-          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600 mb-4 py-2">
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-rose-600 mb-4 py-2">
             Notre Histoire
           </h1>
           <p className="text-gray-500 italic">Chaque étape à tes côtés est mon moment préféré.</p>
@@ -59,7 +59,7 @@ const OurStory = () => {
         {/* La Timeline */}
         <div className="relative">
           {/* La Ligne Verticale Centrale */}
-          <div className="absolute left-4 md:left-1/2 h-full w-1 bg-gradient-to-b from-pink-200 via-pink-300 to-pink-200 rounded-full transform md:-translate-x-1/2"></div>
+          <div className="absolute left-4 md:left-1/2 h-full w-1 bg-linear-to-b from-pink-200 via-pink-300 to-pink-200 rounded-full transform md:-translate-x-1/2"></div>
 
           {/* Les Événements */}
           <div className="flex flex-col gap-12">
@@ -88,7 +88,7 @@ const OurStory = () => {
                         alt={memory.title} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent"></div>
                     </div>
 
                     {/* Contenu */}

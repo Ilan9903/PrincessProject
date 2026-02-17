@@ -40,7 +40,7 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden">
+    <div className="fixed inset-0 z-100 bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden">
       <FloatingHearts />
       <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
 
@@ -95,7 +95,7 @@ const Login = ({ onLogin }) => {
 
           <button 
             type="submit"
-            className="w-full py-4 bg-gradient-to-r from-pink-400 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2 hover:cursor-pointer"
+            className="w-full py-4 bg-linear-to-r from-pink-400 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2 hover:cursor-pointer"
           >
             <span>Entrer</span>
             <span>🔓</span>
