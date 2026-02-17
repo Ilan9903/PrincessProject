@@ -96,14 +96,14 @@ const DateIdeas = () => {
 
       <div className="z-10 w-full max-w-md text-center">
         <h1 className="text-4xl font-bold mb-8 animate-fade-in-up flex items-center justify-center gap-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-500">
                 Qu'est-ce qu'on fait ?
             </span>
             <span className="text-gray-800">🤔</span>
         </h1>
 
         {/* La Carte de Résultat */}
-        <div className={`bg-white rounded-3xl shadow-xl p-8 min-h-[200px] flex flex-col items-center justify-center border-4 border-dashed transition-all duration-300 ${isAnimating ? 'border-purple-200 scale-95' : 'border-pink-300 scale-100'}`}>
+        <div className={`bg-white rounded-3xl shadow-xl p-8 min-h-50 flex flex-col items-center justify-center border-4 border-dashed transition-all duration-300 ${isAnimating ? 'border-purple-200 scale-95' : 'border-pink-300 scale-100'}`}>
           
           {!idea ? (
             <p className="text-gray-400 italic">Clique sur le bouton pour lancer la roue !</p>
@@ -123,7 +123,7 @@ const DateIdeas = () => {
         <button 
           onClick={pickIdea}
           disabled={isAnimating}
-          className="mt-10 group relative px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full shadow-lg hover:-translate-y-1 transition-all active:scale-95 disabled:cursor-not-allowed overflow-hidden w-full md:w-auto hover:cursor-pointer"
+          className="mt-10 group relative px-8 py-4 bg-linear-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full shadow-lg hover:-translate-y-1 transition-all active:scale-95 disabled:cursor-not-allowed overflow-hidden w-full md:w-auto hover:cursor-pointer"
         >
           <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
             {isAnimating ? 'Recherche en cours...' : '🎲 Trouver une idée'}

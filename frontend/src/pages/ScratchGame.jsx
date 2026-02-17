@@ -192,7 +192,7 @@ const ScratchGame = () => {
             <motion.button 
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 onClick={() => window.location.reload()}
-                className="mt-8 px-6 py-2 bg-white text-pink-500 rounded-full font-bold shadow-md text-sm hover:bg-pink-50 transition-colors z-30"
+                className="mt-8 px-6 py-2 bg-white text-pink-500 rounded-full font-bold shadow-md text-sm hover:bg-pink-50 transition-colors z-30 hover:cursor-pointer"
             >
                 🔄 Revoir le secret
             </motion.button>
