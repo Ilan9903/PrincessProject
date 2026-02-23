@@ -25,13 +25,35 @@ console.log('🌐 FRONTEND_URL:', process.env.FRONTEND_URL || 'http://localhost:
 // Middlewares de sécurité
 app.use(helmet());
 
-// CORS Configuration
+// CORS Configuration - Accepter plusieurs origines
+const allowedOrigins = [
+  'http://localhost:1308', // Développement local
+  process.env.FRONTEND_URL, // URL de production Vercel
+  'https://princess-project-chi.vercel.app' // URL de production fixe
+].filter(Boolean); // Retirer les valeurs undefined
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:1308',
+  origin: (origin, callback) => {
+    // Autoriser les requêtes sans origine (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Autoriser toutes les URLs Vercel (preview + production)
+    if (origin.includes('vercel.app')) {
+      return callback(null, true);
+    }
+    
+    // Vérifier si l'origine est dans la liste autorisée
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Non autorisé par CORS'));
+    }
+  },
   credentials: true
 };
 app.use(cors(corsOptions));
-console.log('✅ CORS configuré pour:', corsOptions.origin);
+console.log('✅ CORS configuré pour:', allowedOrigins.join(', '));
+console.log('✅ CORS accepte aussi tous les domaines *.vercel.app');
 
 // Rate limiting : 100 requêtes par 15 minutes
 const limiter = rateLimit({
