@@ -1,21 +1,45 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "princess-project-backend",
+  "version": "2.0.0",
+  "description": "Backend sécurisé pour Princess Project",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:api": "node test-api.js",
+    "lint": "eslint src/"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "princess",
+    "backend",
+    "express",
+    "firebase"
+  ],
+  "author": "The Prince",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "axios": "^1.13.5",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
-    "dotenv": "^17.2.4",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
     "firebase-admin": "^13.6.1",
-    "nodemon": "^3.1.11"
+    "helmet": "^8.1.0",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.1",
+    "nodemon": "^3.1.14"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

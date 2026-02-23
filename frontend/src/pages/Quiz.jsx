@@ -89,20 +89,22 @@ const Quiz = () => {
     }
   }, [isFinished]);
 
-  const handleAnswer = (isCorrect) => {
-    if (isCorrect) {
-      if (currentQuestion + 1 < questions.length) {
+const handleAnswer = (isCorrect) => {
+  if (isCorrect) {
+    if (currentQuestion < questions.length - 1) {
+      setTimeout(() => {
         setCurrentQuestion(currentQuestion + 1);
-      } else {
-        setIsFinished(true);
-      }
+      }, 500);
     } else {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 2000);
+      setIsFinished(true);
     }
-  };
+  } else {
+    setShowError(true);
+    setTimeout(() => setShowError(false), 2000);
+  }
+};
 
-  return (
+return (
     <PageTransition>
       <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] relative overflow-hidden">
         <FloatingHearts />
@@ -144,7 +146,7 @@ const Quiz = () => {
                     <button
                       key={index}
                       onClick={() => handleAnswer(option.isCorrect)}
-                      className="p-4 bg-white rounded-xl border-2 border-pink-50 hover:border-pink-300 hover:bg-pink-50 transition-all text-left text-gray-700 font-medium shadow-sm active:scale-95"
+                      className="p-4 bg-white rounded-xl border-2 border-pink-50 hover:border-pink-300 hover:bg-pink-50 transition-all text-left text-gray-700 font-medium shadow-sm active:scale-95 hover:cursor-pointer"
                     >
                       {option.text}
                     </button>

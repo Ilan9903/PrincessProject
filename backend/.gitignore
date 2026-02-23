@@ -1,19 +1,36 @@
-node_modules
-dist
+# Dépendances
+node_modules/
+
+# Variables d'environnement
 .env
-.env.local
-.env.*.local
+
+# Logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+logs/*.log
+!logs/.gitkeep
+
+# Système d'exploitation
 .DS_Store
-coverage
-.nyc_output
+Thumbs.db
+
+# Éditeur
+.vscode/
+.idea/
 *.swp
 *.swo
-*~
-.vscode
-.idea
 
-princess-project-210622-firebase-adminsdk-fbsvc-810114bce3.json
+# Firebase
+firebase-debug.log
+firestore-debug.log
+
+serviceAccountKey.json
+
+# Divers
+.cache/
+dist/
+build/

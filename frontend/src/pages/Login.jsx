@@ -1,20 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
-import { motion } from 'framer-motion'; // On utilise motion ici
+import { motion } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
+import { login, isAuthenticated } from '../Utils/api';
 
 const Login = ({ onLogin }) => {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // --- LE MOT DE PASSE ---
-  const SECRET_CODE = "2106"; 
+  // ✅ Rediriger si déjà authentifié
+  useEffect(() => {
+    if (isAuthenticated()) {
+      if (onLogin) onLogin();
+      navigate('/home');
+    }
+  }, [navigate, onLogin]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (pin === SECRET_CODE) {
-      onLogin();
+    
+    if (pin.length !== 4) return;
+
+    setIsLoading(true);
+
+    // ✅ NOUVEAU: Appel API sécurisé
+    const result = await login(pin);
+
+    setIsLoading(false);
+
+    if (result.success) {
+      // ✅ Succès: Appeler onLogin si fourni, puis rediriger
+      if (onLogin) onLogin();
+      navigate('/home');
     } else {
+      // ✅ Erreur: Animation shake
       setError(true);
       setTimeout(() => setError(false), 500);
       setPin("");
@@ -71,22 +93,22 @@ const Login = ({ onLogin }) => {
               placeholder="Code PIN" 
               className="w-full text-center text-3xl tracking-[1em] font-bold py-4 bg-pink-50 border-2 border-pink-200 rounded-xl text-pink-600 placeholder:text-pink-300 placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-100 transition-all shadow-inner caret-transparent relative z-0"
               autoFocus
+              disabled={isLoading}
             />
 
             {/* BARRE CLIGNOTANTE PERSONNALISÉE (Version Framer Motion) */}
-            {pin.length < 4 && (
+            {pin.length < 4 && !isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
                 <motion.div 
-                  // Animation de clignotement (Opacité 1 -> 0 -> 1)
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ 
-                    duration: 1.5,         // Durée d'un cycle
-                    repeat: Infinity,    // Répéter à l'infini
-                    ease: "linear"       // Mouvement régulier
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "linear"
                   }}
                   className="h-8 w-0.5 bg-pink-600 rounded-full"
                   style={{ 
-                    x: getCursorPosition(), // Position gérée par Framer Motion
+                    x: getCursorPosition(),
                   }} 
                 />
               </div>
@@ -95,10 +117,23 @@ const Login = ({ onLogin }) => {
 
           <button 
             type="submit"
-            className="w-full py-4 bg-linear-to-r from-pink-400 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2 hover:cursor-pointer"
+            disabled={isLoading || pin.length !== 4}
+            className="w-full py-4 bg-linear-to-r from-pink-400 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-2 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            <span>Entrer</span>
-            <span>🔓</span>
+            {isLoading ? (
+              <>
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <span>Vérification...</span>
+              </>
+            ) : (
+              <>
+                <span>Entrer</span>
+                <span>🔓</span>
+              </>
+            )}
           </button>
         </form>
 

@@ -39,7 +39,8 @@ const ScratchGame = () => {
     // Le modulo (%) permet de boucler : si on est le 5 et qu'il y a 4 secrets, ça prend le n°1.
     const index = today.getDate() % secrets.length;
     return secrets[index];
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secrets]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
