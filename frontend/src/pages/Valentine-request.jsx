@@ -4,7 +4,7 @@ import PageTransition from '../components/PageTransition';
 import axios from 'axios';
 import FloatingHearts from '../components/FloatingHearts';
 
-const API_URL = 'http://localhost:2106/api/valentine-response';
+const API_URL = 'http://localhost:2106/api/valentine';
 const IMG_ASK = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHRxeDhpc2h3aWg0OXUybHJ2em95N2d0aHNiMHZydHpueGIweml6ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Zl7u48zLVFgLpRwq6f/giphy.gif";
 
 const ValentineRequest = () => {
