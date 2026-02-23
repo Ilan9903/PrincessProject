@@ -177,19 +177,19 @@ router.get('/', authenticateToken, async (req, res, next) => {
       const data = doc.data();
       
       // Vérifier si le coupon est expiré
-      let currentStatus = data.status;
-      if (data.expiryDate && new Date(data.expiryDate) < now && data.status === 'available') {
-        currentStatus = 'expired';
-      }
+      const isExpired = data.expirationDate && new Date(data.expirationDate) < now;
       
-      // Filtrer côté serveur
-      if (status && currentStatus !== status) return;
+      // Filtrer sur isRedeemed si demandé via status
+      if (status === 'redeemed' && !data.isRedeemed) return;
+      if (status === 'available' && (data.isRedeemed || isExpired)) return;
+      if (status === 'expired' && !isExpired) return;
+      
+      // Filtrer par type si demandé
       if (type && data.type !== type) return;
       
       coupons.push({ 
         id: doc.id, 
         ...data,
-        status: currentStatus,
         createdAt: data.createdAt?.toDate().toISOString(),
         redeemedAt: data.redeemedAt?.toDate().toISOString()
       });
@@ -201,7 +201,7 @@ router.get('/', authenticateToken, async (req, res, next) => {
       ip: req.ip 
     });
 
-    res.json(coupons);
+    res.json({ coupons });
   } catch (error) {
     logger.error('Erreur récupération coupons', { 
       error: error.message,
@@ -415,7 +415,7 @@ router.patch('/:id/redeem', authenticateToken, async (req, res, next) => {
     const couponData = doc.data();
 
     // Vérifier si déjà utilisé
-    if (couponData.status === 'redeemed') {
+    if (couponData.isRedeemed) {
       return res.status(400).json({ 
         error: 'Ce coupon a déjà été utilisé',
         redeemedAt: couponData.redeemedAt?.toDate().toISOString()
@@ -423,16 +423,16 @@ router.patch('/:id/redeem', authenticateToken, async (req, res, next) => {
     }
 
     // Vérifier si expiré
-    if (couponData.expiryDate && new Date(couponData.expiryDate) < new Date()) {
+    if (couponData.expirationDate && new Date(couponData.expirationDate) < new Date()) {
       return res.status(400).json({ 
         error: 'Ce coupon est expiré',
-        expiryDate: couponData.expiryDate
+        expirationDate: couponData.expirationDate
       });
     }
 
     // Marquer comme utilisé
     await docRef.update({
-      status: 'redeemed',
+      isRedeemed: true,
       redeemedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
@@ -442,9 +442,19 @@ router.patch('/:id/redeem', authenticateToken, async (req, res, next) => {
       ip: req.ip 
     });
 
+    // Récupérer le coupon mis à jour
+    const updatedDoc = await docRef.get();
+    const updatedData = updatedDoc.data();
+
     res.json({ 
       success: true,
-      message: 'Coupon utilisé avec succès ! Profitez-en bien 💖'
+      message: 'Coupon utilisé avec succès ! Profitez-en bien 💖',
+      coupon: {
+        id: updatedDoc.id,
+        ...updatedData,
+        createdAt: updatedData.createdAt?.toDate().toISOString(),
+        redeemedAt: updatedData.redeemedAt?.toDate().toISOString()
+      }
     });
   } catch (error) {
     logger.error('Erreur utilisation coupon', { 

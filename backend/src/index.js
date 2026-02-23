@@ -62,7 +62,6 @@ const limiter = rateLimit({
   message: 'Trop de requêtes depuis cette adresse IP, veuillez réessayer plus tard.',
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  trustProxy: true, // Important pour Railway/Heroku
 });
 app.use('/api', limiter);
 

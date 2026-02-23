@@ -1,36 +1,103 @@
-# Dépendances
+# ═══════════════════════════════════════════════════
+# 🖥️ BACKEND - .gitignore
+# ═══════════════════════════════════════════════════
+
+# ──────────────────────────────────────────────────
+# 🔑 SECRETS & CREDENTIALS (NEVER COMMIT!)
+# ──────────────────────────────────────────────────
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Firebase credentials
+serviceAccountKey.json
+princess-project-*-firebase-adminsdk-*.json
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+firebase-debug.log
+firestore-debug.log
+
+# ──────────────────────────────────────────────────
+# 📦 Dependencies
+# ──────────────────────────────────────────────────
+
 node_modules/
 
-# Variables d'environnement
-.env
+# ──────────────────────────────────────────────────
+# 🏗️ Build Outputs
+# ──────────────────────────────────────────────────
 
-# Logs
+dist/
+build/
+*.tsbuildinfo
+
+# ──────────────────────────────────────────────────
+# 📝 Logs
+# ──────────────────────────────────────────────────
+
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
 
+# Keep logs directory but ignore contents
 logs/*.log
 !logs/.gitkeep
 
-# Système d'exploitation
-.DS_Store
-Thumbs.db
+# ──────────────────────────────────────────────────
+# 🧪 Testing & Coverage
+# ──────────────────────────────────────────────────
 
-# Éditeur
+coverage/
+.nyc_output/
+*.lcov
+
+# ──────────────────────────────────────────────────
+# 💻 IDE & Editors
+# ──────────────────────────────────────────────────
+
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+.project
+.classpath
+.settings/
 
-# Firebase
-firebase-debug.log
-firestore-debug.log
+# ──────────────────────────────────────────────────
+# 🖥️ OS Files
+# ──────────────────────────────────────────────────
 
-serviceAccountKey.json
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+Desktop.ini
 
-# Divers
+# ──────────────────────────────────────────────────
+# 🔧 Misc
+# ──────────────────────────────────────────────────
+
 .cache/
-dist/
-build/
+.temp/
+.tmp/
+*.pid
+*.seed
+*.pid.lock
+
+# ──────────────────────────────────────────────────
+# 🚀 Deployment
+# ──────────────────────────────────────────────────
+
+.vercel
+.netlify

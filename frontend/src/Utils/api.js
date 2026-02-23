@@ -8,13 +8,11 @@ const getToken = () => {
 // Stocker le token
 const setToken = (token) => {
   localStorage.setItem('princess_token', token);
-  localStorage.setItem('princess_access', 'true'); // Pour compatibilité
 };
 
 // Supprimer le token
 const removeToken = () => {
   localStorage.removeItem('princess_token');
-  localStorage.removeItem('princess_access');
 };
 
 // Vérifier si authentifié
@@ -67,7 +65,23 @@ export const verifyToken = async () => {
 };
 
 // Logout
-export const logout = () => {
+export const logout = async () => {
+  const token = getToken();
+  
+  if (token) {
+    try {
+      // Appeler l'endpoint logout du backend pour blacklister le token
+      await fetch(`${API_URL}/api/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error('Erreur lors du logout:', error);
+    }
+  }
+  
   removeToken();
 };
 

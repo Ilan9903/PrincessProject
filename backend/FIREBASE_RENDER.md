@@ -1,7 +1,7 @@
-# 🔐 Guide : Extraire les credentials Firebase pour Railway
+# 🔐 Guide : Extraire les credentials Firebase pour Render
 
 ## Pourquoi ?
-Le fichier `serviceAccountKey.json` contient vos credentials Firebase et **ne doit JAMAIS** être committé sur Git. Pour Railway, on utilise des **variables d'environnement** à la place.
+Le fichier `serviceAccountKey.json` contient vos credentials Firebase et **ne doit JAMAIS** être committé sur Git. Pour Render, on utilise des **variables d'environnement** à la place.
 
 ## Comment extraire les credentials ?
 
@@ -30,12 +30,12 @@ Vous avez besoin de **3 champs uniquement** :
 2. **`client_email`** → Variable `FIREBASE_CLIENT_EMAIL`
 3. **`private_key`** → Variable `FIREBASE_PRIVATE_KEY`
 
-### Étape 3️⃣ : Copier dans Railway
+### Étape 3️⃣ : Copier dans Render
 
 #### Option A : Via l'interface web (recommandé)
 
-1. Aller sur Railway → Votre projet → Onglet **"Variables"**
-2. Cliquer **"New Variable"**
+1. Aller sur Render → Votre Web Service → Onglet **"Environment"**
+2. Cliquer **"Add Environment Variable"**
 3. Ajouter une par une :
 
 **Variable 1 :**
@@ -59,7 +59,7 @@ Value: -----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEA
 ⚠️ **IMPORTANT pour `FIREBASE_PRIVATE_KEY`** :
 - Copier la valeur COMPLÈTE entre guillemets
 - Les `\n` doivent être CONSERVÉS (ce sont des caractères littéraux)
-- NE PAS ajouter de guillemets supplémentaires dans Railway
+- NE PAS ajouter de guillemets supplémentaires dans Render
 
 #### Option B : Via script PowerShell (automatique)
 
@@ -70,7 +70,7 @@ Créez un fichier `extract-firebase-env.ps1` :
 $json = Get-Content -Path "serviceAccountKey.json" -Raw | ConvertFrom-Json
 
 # Afficher les variables d'environnement
-Write-Host "`n🔑 Variables d'environnement Firebase pour Railway :" -ForegroundColor Cyan
+Write-Host "`n🔑 Variables d'environnement Firebase pour Render :" -ForegroundColor Cyan
 Write-Host "=" * 60 -ForegroundColor Gray
 
 Write-Host "`nFIREBASE_PROJECT_ID=" -NoNewline -ForegroundColor Yellow
@@ -83,7 +83,7 @@ Write-Host "`nFIREBASE_PRIVATE_KEY=" -NoNewline -ForegroundColor Yellow
 Write-Host $json.private_key -ForegroundColor Green
 
 Write-Host "`n" + "=" * 60 -ForegroundColor Gray
-Write-Host "✅ Copiez ces valeurs dans Railway > Variables" -ForegroundColor Cyan
+Write-Host "✅ Copiez ces valeurs dans Render > Environment" -ForegroundColor Cyan
 ```
 
 Puis exécuter :
@@ -94,9 +94,9 @@ powershell -ExecutionPolicy Bypass -File extract-firebase-env.ps1
 
 ### Étape 4️⃣ : Vérifier la configuration
 
-Une fois les 3 variables ajoutées dans Railway :
+Une fois les 3 variables ajoutées dans Render :
 
-1. Railway redéploie automatiquement
+1. Render redéploie automatiquement
 2. Vérifier les logs : vous devriez voir `🔧 Mode PRODUCTION : Utilisation des variables d'environnement Firebase`
 3. Puis `✅ Firebase initialisé avec succès`
 
@@ -153,11 +153,11 @@ Si vous voyez `🔧 Mode DEVELOPMENT : Utilisation du fichier serviceAccountKey.
 → `FIREBASE_PRIVATE_KEY` mal formatée, vérifier les `\n`
 
 ### Serveur crash au démarrage
-→ Vérifier les logs Railway, chercher "Firebase" ou "ERREUR"
+→ Vérifier les logs Render, chercher "Firebase" ou "ERREUR"
 
 ### "serviceAccountKey.json introuvable" en production
-→ Normal ! En production Railway utilise les variables d'env
+→ Normal ! En production Render utilise les variables d'env
 
 ---
 
-✅ Une fois configuré, Railway peut accéder à Firebase sans avoir besoin du fichier JSON !
+✅ Une fois configuré, Render peut accéder à Firebase sans avoir besoin du fichier JSON !

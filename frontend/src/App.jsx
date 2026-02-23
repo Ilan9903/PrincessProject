@@ -3,6 +3,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react'; // <--- Import pour 
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
+import { isAuthenticated, verifyToken } from './Utils/api';
 
 // --- COMPOSANTS ---
 import ScrollToTop from './components/ScrollToTop';
@@ -22,19 +23,12 @@ import Coupons from './pages/Coupons';
 import Wheel from './pages/Wheel';
 import Quiz from './pages/Quiz';
 import ScratchGame from './pages/ScratchGame';
+import Playlist from './pages/Playlist';
 
 // --- GESTION DES ROUTES ANIMÉES ---
-// Ce composant s'occupe de vérifier la sécurité et de gérer les transitions
-const AnimatedRoutes = ({ setIsAuthenticated }) => {
+// Ce composant s'occupe de gérer les transitions entre pages
+const AnimatedRoutes = () => {
   const location = useLocation();
-
-  // Sécurité : Vérifie le token à chaque changement de page
-  useEffect(() => {
-    const hasAccessed = localStorage.getItem('princess_access') === 'true';
-    if (!hasAccessed) {
-      setIsAuthenticated(false);
-    }
-  }, [location, setIsAuthenticated]);
 
   return (
     // mode="wait" : attend que la page sorte avant de faire entrer la nouvelle
@@ -51,6 +45,7 @@ const AnimatedRoutes = ({ setIsAuthenticated }) => {
         <Route path="/wheel" element={<Wheel />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/scratch" element={<ScratchGame />} />
+        <Route path="/playlist" element={<Playlist />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
 
@@ -65,16 +60,30 @@ function App() {
   // --- PWA : Enregistrement du service worker pour le mode hors-ligne ---
   useRegisterSW();
 
-  // État de connexion : vérifie le localStorage au chargement
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('princess_access') === 'true';
+  // État de connexion : vérifie le JWT au chargement
+  const [isAuth, setIsAuth] = useState(() => {
+    return isAuthenticated();
   });
+
+  // Vérifier la validité du token au chargement initial
+  useEffect(() => {
+    const checkTokenValidity = async () => {
+      // Seulement si on pense être authentifié
+      if (isAuth) {
+        const isValid = await verifyToken();
+        if (!isValid) {
+          // Token invalide/expiré, déconnecter
+          setIsAuth(false);
+        }
+      }
+    };
+    
+    checkTokenValidity();
+  }, []); // Seulement au montage initial
 
   // Fonction appelée quand le Login est validé
   const handleLogin = () => {
-    localStorage.setItem('princess_access', 'true'); // Sauvegarde le cookie
-    setIsAuthenticated(true); // Déclenche l'affichage du site
-     // Redirige vers la page d'accueil après login
+    setIsAuth(true); // Déclenche l'affichage du site
   };
 
   return (
@@ -84,14 +93,14 @@ function App() {
       
       {/* 🎵 LECTEUR MUSIQUE PERSISTANT 🎵 */}
       {/* Il est ici pour ne pas être rechargé quand on change de page */}
-      {isAuthenticated && <MusicPlayer />}
+      {isAuth && <MusicPlayer />}
       
       {/* Invite d'installation PWA */}
-      {isAuthenticated && <InstallPrompt />}
+      {isAuth && <InstallPrompt />}
       
       {/* Gestion de l'affichage : Login OU Site */}
       <AnimatePresence mode="wait">
-        {!isAuthenticated ? (
+        {!isAuth ? (
           
           // --- ÉCRAN DE LOGIN ---
           <motion.div 
@@ -111,7 +120,7 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }} // Apparition douce
           >
-            <AnimatedRoutes setIsAuthenticated={setIsAuthenticated} />
+            <AnimatedRoutes />
           </motion.div>
 
         )}

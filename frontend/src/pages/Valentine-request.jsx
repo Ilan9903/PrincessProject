@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
-import axios from 'axios';
+import { authenticatedFetch } from '../Utils/api';
 import FloatingHearts from '../components/FloatingHearts';
 
-const API_URL = 'http://localhost:2106/api/valentine';
 const IMG_ASK = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHRxeDhpc2h3aWg0OXUybHJ2em95N2d0aHNiMHZydHpueGIweml6ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Zl7u48zLVFgLpRwq6f/giphy.gif";
 
 const ValentineRequest = () => {
@@ -33,8 +32,16 @@ const ValentineRequest = () => {
   };
 
   const handleYes = async () => {
-    try { await axios.post(API_URL, { answer: 'OUI', timestamp: new Date() }); } catch (error) {
-      error// Silently ignore API errors and proceed to success page
+    try {
+      await authenticatedFetch('/api/valentine', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          answer: 'OUI', 
+          timestamp: new Date() 
+        })
+      });
+    } catch (error) {
+      // Silently ignore API errors and proceed to success page
     }
     navigate('/success', { state: { fromValentine: true } });
   };

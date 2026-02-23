@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
 import { Link } from 'react-router-dom';
 import FloatingHearts from '../components/FloatingHearts';
+import { authenticatedFetch } from '../Utils/api';
 
 const DateIdeas = () => {
   const [idea, setIdea] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Ta liste d'idées (Tu peux en rajouter autant que tu veux !)
   const ideasPool = [
@@ -87,48 +90,175 @@ const DateIdeas = () => {
     }, 80);
   };
 
+  // Charger les événements à venir
+  useEffect(() => {
+    fetchUpcomingEvents();
+  }, []);
+
+  const fetchUpcomingEvents = async () => {
+    try {
+      const response = await authenticatedFetch('/api/planning?upcoming=true');
+      const data = await response.json();
+      setUpcomingEvents(Array.isArray(data) ? data.filter(e => e.status !== 'completed' && e.status !== 'cancelled') : []);
+    } catch (error) {
+      console.error('Erreur chargement événements:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Planifier l'idée actuelle
+  const handlePlanIdea = async () => {
+    if (!idea) return;
+    
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
+    
+    try {
+      const response = await authenticatedFetch('/api/planning', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: idea.text,
+          description: `Type: ${idea.type}`,
+          date: nextWeek.toISOString().split('T')[0],
+          type: 'date',
+          status: 'planned'
+        })
+      });
+      
+      if (response.ok) {
+        await fetchUpcomingEvents(); // Recharger la liste
+        alert('✅ Date planifiée avec succès !');
+      }
+    } catch (error) {
+      console.error('Erreur planification:', error);
+      alert('❌ Erreur lors de la planification');
+    }
+  };
+
+  // Marquer comme complété
+  const handleCompleteEvent = async (eventId) => {
+    try {
+      const event = upcomingEvents.find(e => e.id === eventId);
+      if (!event) return;
+      
+      const response = await authenticatedFetch(`/api/planning/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...event,
+          status: 'completed'
+        })
+      });
+      
+      if (response.ok) {
+        await fetchUpcomingEvents();
+      }
+    } catch (error) {
+      console.error('Erreur completion:', error);
+    }
+  };
+
 return (
     <PageTransition>
-    <div className="fixed inset-0 bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display']">
+    <div className="fixed inset-0 bg-pink-50 overflow-y-auto font-['Playfair_Display']">
       <FloatingHearts />
       
-      <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+      <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
 
-      <div className="z-10 w-full max-w-md text-center">
-        <h1 className="text-4xl font-bold mb-8 animate-fade-in-up flex items-center justify-center gap-2">
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-500">
-                Qu'est-ce qu'on fait ?
-            </span>
-            <span className="text-gray-800">🤔</span>
-        </h1>
-
-        {/* La Carte de Résultat */}
-        <div className={`bg-white rounded-3xl shadow-xl p-8 min-h-50 flex flex-col items-center justify-center border-4 border-dashed transition-all duration-300 ${isAnimating ? 'border-purple-200 scale-95' : 'border-pink-300 scale-100'}`}>
-          
-          {!idea ? (
-            <p className="text-gray-400 italic">Clique sur le bouton pour lancer la roue !</p>
-          ) : (
-            <div className="animate-fade-in flex flex-col items-center gap-4">
-              <span className={`px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${idea.color}`}>
-                {idea.type}
+      <div className="min-h-screen flex flex-col items-center justify-start p-6 pt-24">
+        <div className="z-10 w-full max-w-md text-center">
+          <h1 className="text-4xl font-bold mb-8 animate-fade-in-up flex items-center justify-center gap-2">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-500">
+                  Qu'est-ce qu'on fait ?
               </span>
-              <p className="text-2xl md:text-3xl font-bold text-gray-800 leading-relaxed">
-                {idea.text}
-              </p>
-            </div>
-          )}
+              <span className="text-gray-800">🤔</span>
+          </h1>
+
+          {/* La Carte de Résultat */}
+          <div className={`bg-white rounded-3xl shadow-xl p-8 min-h-50 flex flex-col items-center justify-center border-4 border-dashed transition-all duration-300 ${isAnimating ? 'border-purple-200 scale-95' : 'border-pink-300 scale-100'}`}>
+            
+            {!idea ? (
+              <p className="text-gray-400 italic">Clique sur le bouton pour lancer la roue !</p>
+            ) : (
+              <div className="animate-fade-in flex flex-col items-center gap-4">
+                <span className={`px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${idea.color}`}>
+                  {idea.type}
+                </span>
+                <p className="text-2xl md:text-3xl font-bold text-gray-800 leading-relaxed">
+                  {idea.text}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Les Boutons d'Action */}
+          <div className="flex flex-col gap-4 mt-10">
+            <button 
+              onClick={pickIdea}
+              disabled={isAnimating}
+              className="group relative px-8 py-4 bg-linear-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full shadow-lg hover:-translate-y-1 transition-all active:scale-95 disabled:cursor-not-allowed overflow-hidden w-full hover:cursor-pointer"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
+                {isAnimating ? 'Recherche en cours...' : '🎲 Trouver une idée'}
+              </span>
+            </button>
+
+            {idea && !isAnimating && (
+              <button 
+                onClick={handlePlanIdea}
+                className="px-8 py-4 bg-white border-2 border-pink-300 text-pink-600 font-bold rounded-full shadow-md hover:-translate-y-1 transition-all active:scale-95 w-full hover:bg-pink-50"
+              >
+                <span className="flex items-center justify-center gap-2 text-lg">
+                  📅 Planifier cette date
+                </span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Le Bouton d'Action */}
-        <button 
-          onClick={pickIdea}
-          disabled={isAnimating}
-          className="mt-10 group relative px-8 py-4 bg-linear-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full shadow-lg hover:-translate-y-1 transition-all active:scale-95 disabled:cursor-not-allowed overflow-hidden w-full md:w-auto hover:cursor-pointer"
-        >
-          <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
-            {isAnimating ? 'Recherche en cours...' : '🎲 Trouver une idée'}
-          </span>
-        </button>
+        {/* Prochaines dates planifiées */}
+        {!loading && upcomingEvents.length > 0 && (
+          <div className="z-10 w-full max-w-md mt-16 mb-8">
+            <h2 className="text-2xl font-bold text-gray-700 mb-6 flex items-center gap-2">
+              📆 Prochaines dates
+            </h2>
+            <div className="space-y-4">
+              {upcomingEvents.slice(0, 5).map(event => (
+                <div 
+                  key={event.id}
+                  className="bg-white rounded-2xl shadow-md p-5 border-l-4 border-purple-400 hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-800 text-lg mb-1">{event.title}</h3>
+                      <p className="text-sm text-gray-500 flex items-center gap-2">
+                        🗓️ {new Date(event.date).toLocaleDateString('fr-FR', { 
+                          weekday: 'long', 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })}
+                      </p>
+                      {event.description && (
+                        <p className="text-sm text-gray-600 mt-2">{event.description}</p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => handleCompleteEvent(event.id)}
+                      className="ml-3 text-2xl hover:scale-110 transition-transform active:scale-95"
+                      title="Marquer comme fait"
+                    >
+                      ✅
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
     </PageTransition>

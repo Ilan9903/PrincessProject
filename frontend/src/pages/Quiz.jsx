@@ -5,65 +5,37 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import FloatingHearts from '../components/FloatingHearts';
 import PageTransition from '../components/PageTransition';
+import { authenticatedFetch } from '../Utils/api';
 
 const Quiz = () => {
-  // --- TES QUESTIONS ---
-  const questions = [
-    {
-      id: 1,
-      question: "Où nous sommes-nous embrassés pour la première fois ?",
-      options: [
-        { text: "Dans ta voiture", isCorrect: false },
-        { text: "Au cinéma", isCorrect: false },
-        { text: "Sur un banc au parc", isCorrect: true },
-        { text: "On s'est embrassé ?!", isCorrect: false },
-      ],
-    },
-    {
-      id: 2,
-      question: "Quel est mon plat préféré que tu cuisines ?",
-      options: [
-        { text: "Les pâtes carbo", isCorrect: true },
-        { text: "La quiche lorraine", isCorrect: false },
-        { text: "Les sushis maison", isCorrect: false },
-        { text: "Rien, je commande UberEats", isCorrect: false },
-      ],
-    },
-    {
-      id: 3,
-      question: "Quelle est la date exacte de notre rencontre ?",
-      options: [
-        { text: "14 Février", isCorrect: false },
-        { text: "12 Octobre", isCorrect: true },
-        { text: "13 Octobre", isCorrect: false },
-        { text: "Je demande à mon avocat", isCorrect: false },
-      ],
-    },
-    {
-      id: 4,
-      question: "Si on gagnait au loto, on partirait où ?",
-      options: [
-        { text: "Aux Maldives", isCorrect: false },
-        { text: "Au Japon", isCorrect: true },
-        { text: "Dans la Creuse", isCorrect: false },
-        { text: "À New York", isCorrect: false },
-      ],
-    },
-    {
-      id: 5,
-      question: "Qui a dit 'Je t'aime' en premier ?",
-      options: [
-        { text: "C'est toi !", isCorrect: true },
-        { text: "C'est moi (évidemment)", isCorrect: false },
-        { text: "En même temps", isCorrect: false },
-        { text: "Le chien", isCorrect: false },
-      ],
-    },
-  ];
-
+  const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [score, setScore] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+
+  // Charger les questions depuis l'API
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await authenticatedFetch('/api/quiz/questions');
+        const data = await response.json();
+        
+        if (Array.isArray(data) && data.length > 0) {
+          setQuestions(data);
+          setTotalQuestions(data.length);
+        }
+      } catch (error) {
+        console.error('Erreur chargement questions:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   useEffect(() => {
     if (isFinished) {
@@ -89,20 +61,66 @@ const Quiz = () => {
     }
   }, [isFinished]);
 
-const handleAnswer = (isCorrect) => {
-  if (isCorrect) {
-    if (currentQuestion < questions.length - 1) {
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion + 1);
-      }, 500);
-    } else {
-      setIsFinished(true);
+  const handleAnswer = async (selectedAnswer) => {
+    const currentQ = questions[currentQuestion];
+    
+    try {
+      // Soumettre la réponse à l'API
+      const response = await authenticatedFetch('/api/quiz/answers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          questionId: currentQ.id,
+          selectedAnswer
+        })
+      });
+      
+      const data = await response.json();
+      const isCorrect = data.isCorrect;
+      
+      if (isCorrect) {
+        setScore(score + 1);
+        
+        if (currentQuestion < questions.length - 1) {
+          setTimeout(() => {
+            setCurrentQuestion(currentQuestion + 1);
+          }, 500);
+        } else {
+          setIsFinished(true);
+        }
+      } else {
+        setShowError(true);
+        setTimeout(() => setShowError(false), 2000);
+      }
+    } catch (error) {
+      console.error('Erreur soumission réponse:', error);
+      setShowError(true);
+      setTimeout(() => setShowError(false), 2000);
     }
-  } else {
-    setShowError(true);
-    setTimeout(() => setShowError(false), 2000);
+  };
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center">
+          <div className="text-6xl animate-bounce">❓</div>
+          <p className="mt-4 text-gray-600 font-['Playfair_Display']">Chargement des questions...</p>
+        </div>
+      </PageTransition>
+    );
   }
-};
+
+  if (questions.length === 0) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center">
+          <div className="text-6xl mb-4">😢</div>
+          <p className="text-gray-600 font-['Playfair_Display']">Aucune question disponible</p>
+          <Link to="/" className="mt-6 px-6 py-3 bg-pink-500 text-white rounded-full">Retour</Link>
+        </div>
+      </PageTransition>
+    );
+  }
 
 return (
     <PageTransition>
@@ -145,10 +163,10 @@ return (
                   {questions[currentQuestion].options.map((option, index) => (
                     <button
                       key={index}
-                      onClick={() => handleAnswer(option.isCorrect)}
+                      onClick={() => handleAnswer(option)}
                       className="p-4 bg-white rounded-xl border-2 border-pink-50 hover:border-pink-300 hover:bg-pink-50 transition-all text-left text-gray-700 font-medium shadow-sm active:scale-95 hover:cursor-pointer"
                     >
-                      {option.text}
+                      {option}
                     </button>
                   ))}
                 </div>
@@ -172,19 +190,31 @@ return (
             initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
             className="text-center z-10 p-8 bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-200 max-w-sm"
           >
-            <div className="text-6xl mb-4">🏆</div>
+            <div className="text-6xl mb-4">{score === totalQuestions ? '🏆' : score >= totalQuestions * 0.7 ? '🎉' : '💪'}</div>
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-purple-600 mb-4">
-              100% Correct !
+              {score === totalQuestions ? '100% Correct !' : `${score}/${totalQuestions} Correct !`}
             </h2>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              Bravo mon amour, tu me connais vraiment par cœur. Je t'aime ! ❤️
+              {score === totalQuestions 
+                ? "Bravo mon amour, tu me connais vraiment par cœur. Je t'aime ! ❤️" 
+                : score >= totalQuestions * 0.7
+                ? "Pas mal ! Tu me connais bien, mais il y a encore quelques secrets... 😘"
+                : "On dirait que quelqu'un a besoin de passer plus de temps avec moi ! 😉"}
             </p>
-            <Link 
-              to="/coupons" 
-              className="inline-block px-8 py-3 bg-linear-to-r from-pink-500 to-rose-500 text-white rounded-full font-bold shadow-lg hover:shadow-pink-300/50 hover:-translate-y-1 transition-all"
-            >
-              Réclamer ma récompense 🎁
-            </Link>
+            <div className="flex flex-col gap-3">
+              <Link 
+                to="/coupons" 
+                className="inline-block px-8 py-3 bg-linear-to-r from-pink-500 to-rose-500 text-white rounded-full font-bold shadow-lg hover:shadow-pink-300/50 hover:-translate-y-1 transition-all"
+              >
+                Réclamer ma récompense 🎁
+              </Link>
+              <button 
+                onClick={() => window.location.reload()}
+                className="px-8 py-3 bg-white border-2 border-pink-300 text-pink-600 rounded-full font-bold hover:bg-pink-50 transition-all"
+              >
+                Recommencer 🔄
+              </button>
+            </div>
           </motion.div>
         )}
       </div>

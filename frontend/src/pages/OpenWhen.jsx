@@ -1,64 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
 import { Link } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion'; // On ajoute Framer Motion
 import FloatingHearts from '../components/FloatingHearts';
+import { authenticatedFetch } from '../Utils/api';
 
 const OpenWhen = () => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedEnvelope, setSelectedEnvelope] = useState(null);
+  const [shakeId, setShakeId] = useState(null);
 
-  // --- TES LETTRES ---
-  const envelopes = [
-    {
-      id: 1,
-      title: "Quand tu es triste 😢",
-      color: "border-blue-200 text-blue-600 bg-blue-50",
-      sealColor: "bg-blue-500",
-      content: "Mon amour, sache que même les nuages les plus gris finissent par passer. Je suis là pour toi, toujours. Prends une grande inspiration, tout va bien se passer.",
-      image: "https://media.giphy.com/media/3oEdv4hwWTzBhWvaU0/giphy.gif"
-    },
-    {
-      id: 2,
-      title: "Quand je te manque 🥺",
-      color: "border-purple-200 text-purple-600 bg-purple-50",
-      sealColor: "bg-purple-500",
-      content: "Ferme les yeux et imagine que je suis juste à côté de toi. On se retrouve très vite. En attendant, regarde cette photo qui me fait penser à nous.",
-      image: "https://media.giphy.com/media/VbawWIGNtWAu79qQKS/giphy.gif"
-    },
-    {
-      id: 3,
-      title: "Quand tu es fâchée contre moi 😡",
-      color: "border-red-200 text-red-600 bg-red-50",
-      sealColor: "bg-red-500",
-      content: "Je suis désolé si j'ai agi comme un idiot (ce qui arrive parfois !). Je ne veux jamais te blesser. Pardonne-moi ? ❤️",
-      image: "https://media.giphy.com/media/l4pTdcifPZLpDjL1e/giphy.gif"
-    },
-    {
-      id: 4,
-      title: "Quand tu as besoin de rire 😂",
-      color: "border-yellow-200 text-yellow-600 bg-yellow-50",
-      sealColor: "bg-yellow-500",
-      content: "Rappelle-toi la fois où... (Insère ici un souvenir drôle ou une blague nulle que tu adores). Ton sourire est ce que je préfère au monde.",
-      image: "https://media.giphy.com/media/kaq6GnxDlJaBq/giphy.gif"
-    },
-    {
-      id: 5,
-      title: "Quand tu doutes de nous 💭",
-      color: "border-pink-200 text-pink-600 bg-pink-50",
-      sealColor: "bg-pink-500",
-      content: "Regarde tout le chemin qu'on a parcouru. Tu es la femme de ma vie et je te choisirai encore et encore, chaque jour.",
-      image: "https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif"
-    },
-    {
-      id: 6,
-      title: "Quand tu as besoin de motivation 💪",
-      color: "border-green-200 text-green-600 bg-green-50",
-      sealColor: "bg-green-500",
-      content: "Tu es capable de tout. Tu es intelligente, forte et incroyable. Ne laisse personne te dire le contraire. Fonce !",
-      image: "https://media.giphy.com/media/1xVbRS6j52YSzp9E7Q/giphy.gif"
-    },
-  ];
+  // Charger les messages depuis l'API
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await authenticatedFetch('/api/messages');
+        const data = await response.json();
+        setMessages(Array.isArray(data) ? data : data.messages || []);
+      } catch (error) {
+        console.error('Erreur chargement messages:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  // Configuration des couleurs par catégorie
+  const getCategoryStyle = (category) => {
+    const styles = {
+      triste: { color: "border-blue-200 text-blue-600 bg-blue-50", seal: "bg-blue-500" },
+      manque: { color: "border-purple-200 text-purple-600 bg-purple-50", seal: "bg-purple-500" },
+      fachee: { color: "border-red-200 text-red-600 bg-red-50", seal: "bg-red-500" },
+      rire: { color: "border-yellow-200 text-yellow-600 bg-yellow-50", seal: "bg-yellow-500" },
+      doute: { color: "border-pink-200 text-pink-600 bg-pink-50", seal: "bg-pink-500" },
+      motivation: { color: "border-green-200 text-green-600 bg-green-50", seal: "bg-green-500" },
+      default: { color: "border-gray-200 text-gray-600 bg-gray-50", seal: "bg-gray-500" }
+    };
+    return styles[category] || styles.default;
+  };
+
+  // Vérifier si message est verrouillé
+  const isLocked = (message) => {
+    if (!message.lockedUntil) return false;
+    return new Date(message.lockedUntil) > new Date();
+  };
+
+  // Gérer le clic sur une enveloppe
+  const handleEnvelopeClick = (message) => {
+    if (isLocked(message)) {
+      // Animation shake si verrouillé
+      setShakeId(message.id);
+      setTimeout(() => setShakeId(null), 500);
+    } else {
+      setSelectedEnvelope(message);
+    }
+  };
+
+  // Formater la date de déverrouillage
+  const formatUnlockDate = (date) => {
+    return new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  };
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-stone-100 flex items-center justify-center font-['Playfair_Display']">
+          <div className="text-center">
+            <div className="text-4xl mb-4 animate-bounce">💌</div>
+            <p className="text-gray-500 italic">Chargement de tes lettres...</p>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>
@@ -79,31 +97,43 @@ const OpenWhen = () => {
 
           {/* GRILLE DES ENVELOPPES */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full px-2 pb-20">
-            {envelopes.map((env) => (
+            {messages.map((msg) => {
+              const locked = isLocked(msg);
+              const style = getCategoryStyle(msg.category);
+              
+              return (
               <motion.button
-                key={env.id}
-                whileHover={{ scale: 1.02, rotate: 1 }}
+                key={msg.id}
+                whileHover={{ scale: locked ? 1 : 1.02, rotate: locked ? 0 : 1 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedEnvelope(env)}
-                className={`relative p-6 rounded-lg shadow-md border border-gray-200 transition-all text-left overflow-hidden hover:cursor-pointer bg-[#fdfbf7] group`}
+                animate={shakeId === msg.id ? { x: [-10, 10, -10, 10, 0], transition: { duration: 0.4 } } : {}}
+                onClick={() => handleEnvelopeClick(msg)}
+                className={`relative p-6 rounded-lg shadow-md border border-gray-200 transition-all text-left overflow-hidden hover:cursor-pointer bg-[#fdfbf7] group ${locked ? 'opacity-75' : ''}`}
               >
                 {/* Liseré de couleur en haut */}
-                <div className={`absolute top-0 left-0 w-full h-1 ${env.sealColor}`}></div>
+                <div className={`absolute top-0 left-0 w-full h-1 ${style.seal}`}></div>
 
                 <div className="flex flex-col items-center text-center gap-4 relative z-10">
-                  {/* Sceau de cire simulé */}
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-inner text-white text-xl font-bold ${env.sealColor} shadow-lg ring-4 ring-white`}>
-                    ✉️
+                  {/* Sceau de cire simulé ou cadenas */}
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-inner text-white text-xl font-bold ${style.seal} shadow-lg ring-4 ring-white`}>
+                    {locked ? '🔒' : '✉️'}
                   </div>
                   
                   <div>
-                    <h3 className={`font-bold text-lg leading-tight ${env.color.split(' ')[1]}`}>{env.title}</h3>
+                    <h3 className={`font-bold text-lg leading-tight ${style.color.split(' ')[1]}`}>{msg.title}</h3>
                     <div className="w-16 h-px bg-gray-300 mx-auto my-3"></div>
-                    <p className="text-xs text-gray-400 uppercase tracking-widest font-sans">Scellé avec amour</p>
+                    {locked ? (
+                      <p className="text-xs text-red-400 uppercase tracking-widest font-sans font-bold">
+                        Déverrouillage : {formatUnlockDate(msg.lockedUntil)}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-400 uppercase tracking-widest font-sans">Scellé avec amour</p>
+                    )}
                   </div>
                 </div>
               </motion.button>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -145,9 +175,9 @@ const OpenWhen = () => {
                   <h2 className="text-2xl font-bold text-red-800 font-serif mb-6">{selectedEnvelope.title}</h2>
                   
                   {/* Image/Gif */}
-                  {selectedEnvelope.image && (
+                  {selectedEnvelope.imageUrl && (
                     <div className="rounded-lg overflow-hidden shadow-sm w-full max-h-48 mb-6 rotate-1 border-4 border-white bg-white">
-                      <img src={selectedEnvelope.image} alt="Gif mignon" className="w-full h-full object-cover" />
+                      <img src={selectedEnvelope.imageUrl} alt="Gif mignon" className="w-full h-full object-cover" />
                     </div>
                   )}
 

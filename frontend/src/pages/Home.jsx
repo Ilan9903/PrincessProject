@@ -1,16 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import FloatingHearts from '../components/FloatingHearts';
 import RelationshipCounter from '../components/RelationshipCounter';
+import { logout } from '../Utils/api';
 import babawa from '../assets/profile.jpg';
 
-const handleLogout = () => {
-  localStorage.setItem('princess_access', 'false');
-  window.location.href = '/login';
-};
-
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = '/';
+  };
+
   return (
     <PageTransition>
       {/* CONTENEUR PRINCIPAL : Bloqué à la hauteur de l'écran (100dvh) */}
@@ -170,29 +173,17 @@ const Home = () => {
                   </div>
                 </Link>
 
-                {/* 7. Bouton Planning (WIP) */}
-                <div className="block p-4 bg-white/60 rounded-2xl border-2 border-dashed border-gray-200 opacity-60 cursor-not-allowed group relative overflow-hidden">
-                  <div className="flex items-center gap-4 grayscale group-hover:grayscale-0 transition-all duration-500 opacity-70 group-hover:opacity-100">
-                    <div className="bg-gray-100 p-3 rounded-xl text-2xl">📅</div>
+                {/* 10. NOTRE PLAYLIST */}
+                <Link to="/playlist" className="group relative block p-4 bg-white rounded-2xl border-2 border-purple-100 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="bg-purple-50 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🎶</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-500 group-hover:text-gray-700">Planning</h2>
-                      <p className="text-gray-400 text-xs">Bientôt disponible</p>
+                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Notre Playlist</h2>
+                      <p className="text-gray-500 text-xs group-hover:text-purple-400">Les chansons qui nous accompagnent</p>
                     </div>
+                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-purple-400">→</div>
                   </div>
-                  <div className="absolute top-2 right-2 bg-gray-200 text-gray-500 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">WIP</div>
-                </div>
-
-                {/* 8. Bouton To-Do List (WIP) */}
-                <div className="block p-4 bg-white/60 rounded-2xl border-2 border-dashed border-gray-200 opacity-60 cursor-not-allowed group relative overflow-hidden">
-                  <div className="flex items-center gap-4 grayscale group-hover:grayscale-0 transition-all duration-500 opacity-70 group-hover:opacity-100">
-                    <div className="bg-gray-100 p-3 rounded-xl text-2xl">✅</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-500 group-hover:text-gray-700">To-Do List</h2>
-                      <p className="text-gray-400 text-xs">En construction</p>
-                    </div>
-                  </div>
-                  <div className="absolute top-2 right-2 bg-gray-200 text-gray-500 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">WIP</div>
-                </div>
+                </Link>
 
               </div>
             </div>

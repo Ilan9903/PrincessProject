@@ -1,21 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
 import PageTransition from '../components/PageTransition';
+import { authenticatedFetch } from '../Utils/api';
 
 const Coupons = () => {
-  const couponsData = [
-    { id: 1, title: "Massage VIP", content: "Valable pour 30 min de massage relaxant (dos ou pieds au choix).", icon: "💆‍♀️", color: "bg-rose-100" },
-    { id: 2, title: "Soirée Sans Vaisselle", content: "Ce soir, je m'occupe de tout. Tu mets juste les pieds sous la table !", icon: "🍽️", color: "bg-blue-100" },
-    { id: 3, title: "Resto Surprise", content: "Un dîner dans l'endroit de ton choix, c'est bibi qui régale.", icon: "🍷", color: "bg-purple-100" },
-    { id: 4, title: "Joker 'J'ai Raison'", content: "Utilise ce ticket pour gagner instantanément n'importe quel débat.", icon: "⚖️", color: "bg-yellow-100" },
-    { id: 5, title: "Petit Déj au Lit", content: "Croissants, café et jus d'orange servis avec amour au réveil.", icon: "🥐", color: "bg-orange-100" },
-    { id: 6, title: "Grands Câlins Illimités", content: "Une dose de tendresse infinie pendant tout le temps nécessaire.", icon: "🫂", color: "bg-pink-100" },
-  ];
-
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [flippedId, setFlippedId] = useState(null);
+
+  // Charger les coupons depuis l'API
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const response = await authenticatedFetch('/api/coupons');
+        const data = await response.json();
+        setCoupons(data.coupons || []);
+      } catch (error) {
+        console.error('Erreur chargement coupons:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCoupons();
+  }, []);
+
+  // Utiliser un coupon
+  const handleRedeem = async (couponId) => {
+    try {
+      const response = await authenticatedFetch(`/api/coupons/${couponId}/redeem`, {
+        method: 'PATCH'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Mettre à jour le coupon localement
+        setCoupons(coupons.map(c => 
+          c.id === couponId ? { ...c, isRedeemed: true, redeemedAt: data.coupon.redeemedAt } : c
+        ));
+        setFlippedId(null); // Refermer la carte
+      }
+    } catch (error) {
+      console.error('Erreur utilisation coupon:', error);
+    }
+  };
+
+  // Couleurs par défaut si pas spécifiées
+  const getColorClass = (index) => {
+    const colors = ['bg-rose-100', 'bg-blue-100', 'bg-purple-100', 'bg-yellow-100', 'bg-orange-100', 'bg-pink-100'];
+    return colors[index % colors.length];
+  };
+
+  // Icônes par défaut si pas spécifiées
+  const getDefaultIcon = (index) => {
+    const icons = ['💆‍♀️', '🍽️', '🍷', '⚖️', '🥐', '🫂'];
+    return icons[index % icons.length];
+  };
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 flex items-center justify-center font-['Playfair_Display']">
+          <div className="text-center">
+            <div className="text-4xl mb-4 animate-bounce">🎁</div>
+            <p className="text-gray-500 italic">Chargement de tes cadeaux...</p>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>
@@ -30,36 +86,71 @@ const Coupons = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl z-10 pb-12">
-          {couponsData.map((coupon) => (
-            <div 
-              key={coupon.id} 
-              className="perspective-1000 h-48 cursor-pointer"
-              onClick={() => setFlippedId(flippedId === coupon.id ? null : coupon.id)}
-            >
-              <motion.div 
-                className="relative w-full h-full transition-all duration-500 preserve-3d"
-                animate={{ rotateY: flippedId === coupon.id ? 180 : 0 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          {coupons.map((coupon, index) => {
+            const isExpired = coupon.expirationDate && new Date(coupon.expirationDate) < new Date();
+            const isUsed = coupon.isRedeemed;
+            const isAvailable = !isExpired && !isUsed;
+            
+            return (
+              <div 
+                key={coupon.id} 
+                className="perspective-1000 h-48 cursor-pointer"
+                onClick={() => isAvailable && setFlippedId(flippedId === coupon.id ? null : coupon.id)}
               >
-                {/* Recto (Côté visible au début) */}
-                <div className={`absolute inset-0 backface-hidden rounded-3xl border-4 border-dashed border-white shadow-xl ${coupon.color} flex flex-col items-center justify-center p-4`}>
-                  <span className="text-5xl mb-2">{coupon.icon}</span>
-                  <h3 className="font-bold text-xl text-gray-700">{coupon.title}</h3>
-                  <div className="mt-4 text-[10px] uppercase tracking-widest text-gray-400 font-sans font-bold">Ticket n°000{coupon.id}</div>
-                </div>
-
-                {/* Verso (Le cadeau révélé) */}
-                <div 
-                  className="absolute inset-0 backface-hidden rounded-3xl border-4 border-pink-300 shadow-2xl bg-white flex flex-col items-center justify-center p-6 text-center rotate-y-180"
+                <motion.div 
+                  className="relative w-full h-full transition-all duration-500 preserve-3d"
+                  animate={{ rotateY: flippedId === coupon.id ? 180 : 0 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
                 >
-                  <p className="text-gray-700 font-serif leading-relaxed italic">
-                    "{coupon.content}"
-                  </p>
-                  <div className="mt-4 bg-pink-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">Utilisable 1 fois</div>
-                </div>
-              </motion.div>
-            </div>
-          ))}
+                  {/* Recto (Côté visible au début) */}
+                  <div className={`absolute inset-0 backface-hidden rounded-3xl border-4 border-dashed border-white shadow-xl ${isUsed ? 'bg-gray-200' : isExpired ? 'bg-gray-100' : getColorClass(index)} flex flex-col items-center justify-center p-4 ${!isAvailable && 'opacity-60'}`}>
+                    <span className="text-5xl mb-2">{coupon.icon || getDefaultIcon(index)}</span>
+                    <h3 className="font-bold text-xl text-gray-700">{coupon.title}</h3>
+                    <div className="mt-4 text-[10px] uppercase tracking-widest text-gray-400 font-sans font-bold">
+                      Ticket n°{String(coupon.id).padStart(4, '0')}
+                    </div>
+                    {isUsed && (
+                      <div className="mt-2 bg-gray-600 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">
+                        ✓ Utilisé
+                      </div>
+                    )}
+                    {isExpired && !isUsed && (
+                      <div className="mt-2 bg-red-400 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase">
+                        Expiré
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Verso (Le cadeau révélé) */}
+                  <div 
+                    className="absolute inset-0 backface-hidden rounded-3xl border-4 border-pink-300 shadow-2xl bg-white flex flex-col items-center justify-center p-6 text-center rotate-y-180"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <p className="text-gray-700 font-serif leading-relaxed italic text-sm mb-4">
+                      "{coupon.description}"
+                    </p>
+                    {isAvailable ? (
+                      <>
+                        <div className="mb-3 bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold uppercase">
+                          Disponible
+                        </div>
+                        <button
+                          onClick={() => handleRedeem(coupon.id)}
+                          className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors active:scale-95"
+                        >
+                          Utiliser maintenant
+                        </button>
+                      </>
+                    ) : (
+                      <div className={`px-4 py-1 rounded-full text-xs font-bold uppercase ${isUsed ? 'bg-gray-600 text-white' : 'bg-red-400 text-white'}`}>
+                        {isUsed ? '✓ Déjà utilisé' : 'Expiré'}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

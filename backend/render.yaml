@@ -1,0 +1,40 @@
+# ═══════════════════════════════════════════════════
+# 🚀 RENDER DEPLOYMENT CONFIG - Princess Project Backend
+# ═══════════════════════════════════════════════════
+
+services:
+  - type: web
+    name: princess-backend
+    runtime: node
+    region: oregon  # Ou: frankfurt, singapore, etc.
+    plan: free  # Ou: starter, standard, pro
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 2106
+      - key: APP_PASSWORD
+        sync: false  # Saisir manuellement dans dashboard
+      - key: JWT_SECRET
+        sync: false  # Générer et saisir dans dashboard
+      - key: FRONTEND_URL
+        value: https://princess-project.vercel.app  # À modifier selon URL Vercel
+      - key: FIREBASE_PROJECT_ID
+        sync: false  # Depuis Firebase JSON
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false  # Depuis Firebase JSON
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false  # Depuis Firebase JSON (avec \n)
+    healthCheckPath: /api/health
+    autoDeploy: true  # Auto-deploy sur git push
+
+# ═══════════════════════════════════════════════════
+# 📝 NOTES:
+# - Ce fichier est optionnel (Render détecte Node.js automatiquement)
+# - Utile pour version control de la config
+# - Les variables marquées 'sync: false' doivent être ajoutées
+#   manuellement dans le dashboard Render pour raisons de sécurité
+# ═══════════════════════════════════════════════════
