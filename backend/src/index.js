@@ -12,18 +12,26 @@ import logger from './utils/logger.js';
 const app = express();
 const PORT = process.env.PORT || 2106;
 
+// ⚙️ Configuration pour les proxies (Railway, Heroku, etc.)
+app.set('trust proxy', 1);
+
 // 🔍 DEBUG : Vérifier les variables d'environnement au démarrage
 console.log('✅ .env chargé');
 console.log('🔐 APP_PASSWORD:', process.env.APP_PASSWORD ? '✓ Défini' : '✗ Manquant');
 console.log('🔑 JWT_SECRET:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Manquant');
 console.log('🔥 FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? '✓ Défini' : '✗ Manquant');
+console.log('🌐 FRONTEND_URL:', process.env.FRONTEND_URL || 'http://localhost:1308');
 
 // Middlewares de sécurité
 app.use(helmet());
-app.use(cors({
+
+// CORS Configuration
+const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:1308',
   credentials: true
-}));
+};
+app.use(cors(corsOptions));
+console.log('✅ CORS configuré pour:', corsOptions.origin);
 
 // Rate limiting : 100 requêtes par 15 minutes
 const limiter = rateLimit({
@@ -32,6 +40,7 @@ const limiter = rateLimit({
   message: 'Trop de requêtes depuis cette adresse IP, veuillez réessayer plus tard.',
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  trustProxy: true, // Important pour Railway/Heroku
 });
 app.use('/api', limiter);
 
