@@ -30,6 +30,7 @@ const ScratchGame = () => {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [gameKey, setGameKey] = useState(0); // Clé pour forcer le re-render
 
   // --- LOGIQUE DU JOUR ---
   // On utilise useMemo pour que ça ne change pas si le composant se rafraîchit
@@ -44,25 +45,8 @@ const ScratchGame = () => {
 
   // Fonction pour réinitialiser le jeu sans recharger la page
   const resetGame = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    // Réinitialiser l'opacité et l'état
-    canvas.style.opacity = '1';
-    canvas.style.transition = '';
     setIsRevealed(false);
-    
-    // Redessiner le canvas
-    const ctx = canvas.getContext('2d');
-    
-    ctx.fillStyle = '#cbd5e1'; 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.font = 'bold 24px "Playfair Display"';
-    ctx.fillStyle = '#94a3b8';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText("✨ Gratte ici ! ✨", canvas.width / 2, canvas.height / 2);
+    setGameKey(prev => prev + 1); // Change la clé pour forcer React à recréer le canvas
   };
 
   useEffect(() => {
@@ -203,7 +187,7 @@ const ScratchGame = () => {
             </motion.div>
           </div>
 
-          <div ref={containerRef} className="absolute inset-0 z-20 cursor-crosshair">
+          <div key={gameKey} ref={containerRef} className="absolute inset-0 z-20 cursor-crosshair">
             <canvas 
                 ref={canvasRef} 
                 className={`w-full h-full touch-none ${isRevealed ? 'pointer-events-none' : ''}`} 
