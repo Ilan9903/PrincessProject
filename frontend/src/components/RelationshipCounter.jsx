@@ -46,13 +46,13 @@ const RelationshipCounter = () => {
 
   return (
     <div className="h-24 flex flex-col items-center justify-center">
-      <p key={mode} className="text-gray-500 italic font-serif text-sm md:text-base animate-smooth text-center px-2 leading-tight">
+      <p key={mode} className="text-gray-500 dark:text-gray-400 italic font-serif text-sm md:text-base animate-smooth text-center px-2 leading-tight transition-colors">
         <span className="block mb-1 opacity-80">Ensemble depuis</span>
         <span className="whitespace-nowrap flex items-center justify-center gap-2">
-          <span className="text-pink-500 font-bold tracking-wider text-xl md:text-2xl transition-all">
+          <span className="text-pink-500 dark:text-pink-400 font-bold tracking-wider text-xl md:text-2xl transition-all">
             {value}
           </span>
-          <span className="text-gray-500">{label} {emojis[mode]}</span>
+          <span className="text-gray-500 dark:text-gray-400 transition-colors">{label} {emojis[mode]}</span>
         </span>
       </p>
     </div>

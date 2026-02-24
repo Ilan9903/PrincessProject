@@ -50,7 +50,14 @@ const Coupons = () => {
 
   // Couleurs par défaut si pas spécifiées
   const getColorClass = (index) => {
-    const colors = ['bg-rose-100', 'bg-blue-100', 'bg-purple-100', 'bg-yellow-100', 'bg-orange-100', 'bg-pink-100'];
+    const colors = [
+      'bg-rose-100 dark:bg-rose-900/40', 
+      'bg-blue-100 dark:bg-blue-900/40', 
+      'bg-purple-100 dark:bg-purple-900/40', 
+      'bg-yellow-100 dark:bg-yellow-900/40', 
+      'bg-orange-100 dark:bg-orange-900/40', 
+      'bg-pink-100 dark:bg-pink-900/40'
+    ];
     return colors[index % colors.length];
   };
 
@@ -75,14 +82,14 @@ const Coupons = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 flex flex-col items-center p-6 font-['Playfair_Display'] relative">
+      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center p-6 font-['Playfair_Display'] relative transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
         <div className="z-10 text-center mt-12 mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Tes Bons Cadeaux</h1>
-          <p className="text-gray-500 italic">Clique sur un ticket pour l'activer...</p>
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">Tes Bons Cadeaux</h1>
+          <p className="text-gray-500 dark:text-gray-400 italic">Clique sur un ticket pour l'activer...</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl z-10 pb-12">
@@ -103,9 +110,9 @@ const Coupons = () => {
                   transition={{ type: "spring", stiffness: 260, damping: 20 }}
                 >
                   {/* Recto (Côté visible au début) */}
-                  <div className={`absolute inset-0 backface-hidden rounded-3xl border-4 border-dashed border-white shadow-xl ${isUsed ? 'bg-gray-200' : isExpired ? 'bg-gray-100' : getColorClass(index)} flex flex-col items-center justify-center p-4 ${!isAvailable && 'opacity-60'}`}>
+                  <div className={`absolute inset-0 backface-hidden rounded-3xl border-4 border-dashed border-white dark:border-gray-600 shadow-xl ${isUsed ? 'bg-gray-200 dark:bg-gray-700' : isExpired ? 'bg-gray-100 dark:bg-gray-600' : getColorClass(index)} flex flex-col items-center justify-center p-4 ${!isAvailable && 'opacity-60'}`}>
                     <span className="text-5xl mb-2">{coupon.icon || getDefaultIcon(index)}</span>
-                    <h3 className="font-bold text-xl text-gray-700">{coupon.title}</h3>
+                    <h3 className="font-bold text-xl text-gray-700 dark:text-gray-200">{coupon.title}</h3>
                     <div className="mt-4 text-[10px] uppercase tracking-widest text-gray-400 font-sans font-bold">
                       Ticket n°{String(coupon.id).padStart(4, '0')}
                     </div>
@@ -123,10 +130,10 @@ const Coupons = () => {
 
                   {/* Verso (Le cadeau révélé) */}
                   <div 
-                    className="absolute inset-0 backface-hidden rounded-3xl border-4 border-pink-300 shadow-2xl bg-white flex flex-col items-center justify-center p-6 text-center rotate-y-180"
+                    className="absolute inset-0 backface-hidden rounded-3xl border-4 border-pink-300 dark:border-pink-700 shadow-2xl bg-white dark:bg-gray-800 flex flex-col items-center justify-center p-6 text-center rotate-y-180 transition-colors"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <p className="text-gray-700 font-serif leading-relaxed italic text-sm mb-4">
+                    <p className="text-gray-700 dark:text-gray-200 font-serif leading-relaxed italic text-sm mb-4">
                       "{coupon.description}"
                     </p>
                     {isAvailable ? (

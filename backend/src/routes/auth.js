@@ -72,9 +72,17 @@ router.post('/login', async (req, res, next) => {
       ip: req.ip 
     });
 
+    // Envoyer le token dans un cookie HttpOnly
+    res.cookie('princess_token', token, {
+      httpOnly: true, // Inaccessible depuis JavaScript
+      secure: process.env.NODE_ENV === 'production', // HTTPS seulement en production
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Protection CSRF
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+      path: '/'
+    });
+
     res.json({
       success: true,
-      token,
       message: 'Connexion réussie ! Bienvenue 💖'
     });
   } catch (error) {
@@ -126,15 +134,13 @@ router.post('/login', async (req, res, next) => {
  */
 router.get('/verify', async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies.princess_token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return res.status(401).json({ 
         error: 'Token manquant' 
       });
     }
-
-    const token = authHeader.substring(7);
 
     // Vérifier si le token est dans la blacklist
     if (tokenBlacklist.has(token)) {
@@ -201,19 +207,26 @@ router.get('/verify', async (req, res, next) => {
  */
 router.post('/logout', async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies.princess_token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return res.status(401).json({ 
         error: 'Token manquant' 
       });
     }
 
-    const token = authHeader.substring(7);
     tokenBlacklist.add(token);
 
     logger.info('Déconnexion réussie', { 
       ip: req.ip 
+    });
+
+    // Supprimer le cookie
+    res.clearCookie('princess_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/'
     });
 
     res.json({

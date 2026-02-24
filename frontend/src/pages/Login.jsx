@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
+import ThemeToggle from '../components/ThemeToggle';
 import { login, isAuthenticated } from '../Utils/api';
 
 const Login = ({ onLogin }) => {
@@ -62,19 +63,20 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-100 bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden">
+    <div className="fixed inset-0 z-100 bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden transition-colors duration-300">
       <FloatingHearts />
-      <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
+      <ThemeToggle />
+      <div className="absolute inset-0 bg-white/30 dark:bg-black/30 backdrop-blur-[2px]"></div>
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
-        className="z-10 w-full max-w-sm bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white flex flex-col items-center text-center"
+        className="z-10 w-full max-w-sm bg-white/80 dark:bg-gray-800/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white dark:border-gray-700 flex flex-col items-center text-center transition-colors duration-300"
       >
         <div className="text-4xl mb-4">👑</div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Espace Privé</h1>
-        <p className="text-gray-500 text-sm mb-8 italic">Accès réservé à ma Princesse</p>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2 transition-colors">Espace Privé</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-8 italic transition-colors">Accès réservé à ma Princesse</p>
 
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
           
@@ -91,7 +93,7 @@ const Login = ({ onLogin }) => {
               value={pin}
               onChange={handlePinChange}
               placeholder="Code PIN" 
-              className="w-full text-center text-3xl tracking-[1em] font-bold py-4 bg-pink-50 border-2 border-pink-200 rounded-xl text-pink-600 placeholder:text-pink-300 placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-100 transition-all shadow-inner caret-transparent relative z-0"
+              className="w-full text-center text-3xl tracking-[1em] font-bold py-4 bg-pink-50 dark:bg-gray-700 border-2 border-pink-200 dark:border-gray-600 rounded-xl text-pink-600 dark:text-pink-400 placeholder:text-pink-300 dark:placeholder:text-gray-500 placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-pink-500 dark:focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:focus:ring-pink-900/30 transition-all shadow-inner caret-transparent relative z-0"
               autoFocus
               disabled={isLoading}
             />
@@ -137,7 +139,7 @@ const Login = ({ onLogin }) => {
           </button>
         </form>
 
-        <p className="mt-6 text-xs text-gray-400">
+        <p className="mt-6 text-xs text-gray-400 dark:text-gray-500 transition-colors">
           Indice : La date de notre rencontre...
         </p>
       </motion.div>

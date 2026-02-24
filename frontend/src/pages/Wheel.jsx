@@ -58,14 +58,14 @@ const Wheel = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-4 relative overflow-hidden font-['Playfair_Display']">
+      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-4 relative overflow-hidden font-['Playfair_Display'] transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
         <div className="text-center z-10 mb-8 mt-4">
-          <h1 className="text-3xl font-bold text-gray-800">La Roue du Soir</h1>
-          <p className="text-gray-500 italic text-sm mt-1">Laisse le destin choisir...</p>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">La Roue du Soir</h1>
+          <p className="text-gray-500 dark:text-gray-400 italic text-sm mt-1">Laisse le destin choisir...</p>
         </div>
 
         <div className="relative z-10 flex flex-col items-center">
@@ -128,9 +128,9 @@ const Wheel = () => {
           <motion.div 
             initial={{ scale: 0, opacity: 0 }} 
             animate={{ scale: 1, opacity: 1 }}
-            className="mt-8 p-6 bg-white rounded-3xl border-4 border-pink-200 shadow-2xl z-10 text-center max-w-xs animate-bounce-short"
+            className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-3xl border-4 border-pink-200 dark:border-pink-700 shadow-2xl z-10 text-center max-w-xs animate-bounce-short transition-colors"
           >
-            <p className="text-gray-400 text-xs uppercase tracking-widest font-bold mb-2">Le verdict :</p>
+            <p className="text-gray-400 dark:text-gray-500 text-xs uppercase tracking-widest font-bold mb-2">Le verdict :</p>
             <h2 className="text-2xl font-bold">
               {/* Le texte coloré (tout sauf les 2 derniers caractères qui sont l'emoji et l'espace) */}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-purple-600">

@@ -1,23 +1,15 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:2106';
 
-// Récupérer le token stocké
-const getToken = () => {
-  return localStorage.getItem('princess_token');
-};
-
-// Stocker le token
-const setToken = (token) => {
-  localStorage.setItem('princess_token', token);
-};
-
-// Supprimer le token
-const removeToken = () => {
-  localStorage.removeItem('princess_token');
-};
-
-// Vérifier si authentifié
-const isAuthenticated = () => {
-  return !!getToken();
+// Vérifier si authentifié (appelle le backend pour vérifier le cookie)
+export const isAuthenticated = async () => {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/verify`, {
+      credentials: 'include', // Envoie les cookies HttpOnly
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
 };
 
 // Login avec mot de passe
@@ -25,6 +17,7 @@ export const login = async (password) => {
   try {
     const response = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
+      credentials: 'include', // Permet de recevoir les cookies HttpOnly
       headers: {
         'Content-Type': 'application/json',
       },
@@ -33,8 +26,8 @@ export const login = async (password) => {
 
     const data = await response.json();
 
-    if (data.success && data.token) {
-      setToken(data.token);
+    if (data.success) {
+      // Le token est maintenant stocké dans un cookie HttpOnly automatiquement
       return { success: true };
     } else {
       return { success: false, error: data.error || 'Erreur de connexion' };
@@ -47,14 +40,9 @@ export const login = async (password) => {
 
 // Vérifier la validité du token
 export const verifyToken = async () => {
-  const token = getToken();
-  if (!token) return false;
-
   try {
     const response = await fetch(`${API_URL}/api/auth/verify`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      credentials: 'include', // Envoie les cookies HttpOnly
     });
 
     return response.ok;
@@ -66,49 +54,32 @@ export const verifyToken = async () => {
 
 // Logout
 export const logout = async () => {
-  const token = getToken();
-  
-  if (token) {
-    try {
-      // Appeler l'endpoint logout du backend pour blacklister le token
-      await fetch(`${API_URL}/api/auth/logout`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      console.error('Erreur lors du logout:', error);
-    }
+  try {
+    // Appeler l'endpoint logout du backend pour blacklister le token et supprimer le cookie
+    await fetch(`${API_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include', // Envoie les cookies HttpOnly
+    });
+  } catch (error) {
+    console.error('Erreur lors du logout:', error);
   }
-  
-  removeToken();
 };
 
 // Fetch avec authentification
 export const authenticatedFetch = async (url, options = {}) => {
-  const token = getToken();
-  
-  if (!token) {
-    throw new Error('Non authentifié');
-  }
-
   const response = await fetch(`${API_URL}${url}`, {
     ...options,
+    credentials: 'include', // Envoie automatiquement les cookies HttpOnly
     headers: {
       ...options.headers,
-      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   });
 
   if (response.status === 401 || response.status === 403) {
-    removeToken();
     window.location.href = '/';
     throw new Error('Session expirée');
   }
 
   return response;
 };
-
-export { isAuthenticated, getToken };

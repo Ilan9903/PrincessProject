@@ -34,7 +34,7 @@ const MusicPlayer = () => {
         onClick={togglePlay}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className={`relative w-14 h-14 flex items-center justify-center rounded-full shadow-xl border-4 border-white transition-all duration-500 ${isPlaying ? 'bg-pink-500' : 'bg-gray-800'}`}
+        className={`relative w-14 h-14 flex items-center justify-center rounded-full shadow-xl border-4 border-white dark:border-gray-700 transition-all duration-500 ${isPlaying ? 'bg-pink-500 dark:bg-pink-600' : 'bg-gray-800 dark:bg-gray-700'}`}
       >
         <span className="text-2xl text-white z-10">
           {isPlaying ? '⏸️' : '🎵'}
@@ -44,12 +44,12 @@ const MusicPlayer = () => {
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-                className="absolute inset-0 rounded-full border-2 border-dashed border-white/50"
+                className="absolute inset-0 rounded-full border-2 border-dashed border-white/50 dark:border-gray-400/50"
             />
         )}
         
         {isPlaying && (
-             <div className="absolute -inset-2 bg-pink-500/30 rounded-full animate-ping"></div>
+             <div className="absolute -inset-2 bg-pink-500/30 dark:bg-pink-600/30 rounded-full animate-ping"></div>
         )}
       </motion.button>
     </div>

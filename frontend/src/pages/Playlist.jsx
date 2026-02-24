@@ -110,10 +110,10 @@ const Playlist = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 overflow-y-auto font-['Playfair_Display']">
+      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg bg-white">🏠</Link>
+        <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
         <div className="container mx-auto px-6 py-24 max-w-4xl">
           {/* En-tête */}
@@ -122,9 +122,9 @@ const Playlist = () => {
               <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-500">
                 Notre Playlist
               </span>
-              <span className="text-gray-800">🎶</span>
+              <span className="text-gray-800 dark:text-gray-100">🎶</span>
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-300 text-lg">
               Les chansons qui nous accompagnent ❤️
             </p>
           </div>
@@ -145,7 +145,7 @@ const Playlist = () => {
                 className={`px-4 py-2 rounded-full font-medium transition-all shadow-md active:scale-95 ${
                   filter === f.value
                     ? 'bg-linear-to-r from-pink-500 to-purple-500 text-white'
-                    : 'bg-white text-gray-700 hover:bg-pink-50'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-pink-50 dark:hover:bg-gray-600'
                 }`}
               >
                 {f.icon} {f.label}
@@ -155,7 +155,7 @@ const Playlist = () => {
 
           {/* Tri */}
           <div className="flex justify-center gap-2 mb-8 z-10 relative">
-            <span className="text-gray-600 self-center">Trier par:</span>
+            <span className="text-gray-600 dark:text-gray-300 self-center">Trier par:</span>
             {[
               { value: 'recent', label: 'Récent' },
               { value: 'popular', label: 'Populaire' },
@@ -166,8 +166,8 @@ const Playlist = () => {
                 onClick={() => setSortBy(s.value)}
                 className={`px-3 py-1 rounded-full text-sm transition-all ${
                   sortBy === s.value
-                    ? 'bg-pink-200 text-pink-700 font-bold'
-                    : 'bg-white text-gray-600 hover:bg-pink-50'
+                    ? 'bg-pink-200 dark:bg-purple-900/50 text-pink-700 dark:text-pink-400 font-bold'
+                    : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-600'
                 }`}
               >
                 {s.label}
@@ -177,7 +177,7 @@ const Playlist = () => {
 
           {/* Liste des chansons */}
           {filteredSongs.length === 0 ? (
-            <div className="text-center py-12 text-gray-500 z-10 relative">
+            <div className="text-center py-12 text-gray-500 dark:text-gray-400 z-10 relative">
               <div className="text-5xl mb-4">🎵</div>
               <p>Aucune chanson trouvée</p>
             </div>
@@ -194,7 +194,7 @@ const Playlist = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ delay: index * 0.05 }}
-                      className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-2 border-pink-100 relative overflow-hidden"
+                      className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-2 border-pink-100 dark:border-gray-700 relative overflow-hidden"
                     >
                       {/* Badge plateforme */}
                       <div className="absolute top-3 right-3 text-2xl">
@@ -203,19 +203,19 @@ const Playlist = () => {
 
                       {/* Contenu */}
                       <div className="mb-4">
-                        <h3 className="text-xl font-bold text-gray-800 mb-1 pr-8">
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1 pr-8">
                           {song.title}
                         </h3>
-                        <p className="text-gray-600 mb-2">{song.artist}</p>
+                        <p className="text-gray-600 dark:text-gray-300 mb-2">{song.artist}</p>
                         {song.album && (
-                          <p className="text-sm text-gray-400 italic">{song.album}</p>
+                          <p className="text-sm text-gray-400 dark:text-gray-500 italic">{song.album}</p>
                         )}
                       </div>
 
                       {/* Raison */}
                       {song.reason && (
-                        <div className="mb-4 p-3 bg-pink-50 rounded-lg border border-pink-100">
-                          <p className="text-sm text-pink-700 italic">
+                        <div className="mb-4 p-3 bg-pink-50 dark:bg-gray-700/50 rounded-lg border border-pink-100 dark:border-gray-600">
+                          <p className="text-sm text-pink-700 dark:text-pink-400 italic">
                             💭 {song.reason}
                           </p>
                         </div>
@@ -227,7 +227,7 @@ const Playlist = () => {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
                         <div className="flex gap-3">
                           <button
                             onClick={() => toggleFavorite(song.id, song.isFavorite)}
@@ -262,7 +262,7 @@ const Playlist = () => {
                         </div>
 
                         {/* Play count */}
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                           <span>🔊</span>
                           <span className="font-bold">{song.playCount || 0}</span>
                         </div>
@@ -276,13 +276,13 @@ const Playlist = () => {
 
           {/* Statistiques */}
           {songs.length > 0 && (
-            <div className="mt-12 text-center text-gray-500 z-10 relative">
+            <div className="mt-12 text-center text-gray-500 dark:text-gray-400 z-10 relative">
               <p className="text-lg">
-                🎵 <span className="font-bold text-gray-700">{songs.length}</span> chanson{songs.length > 1 ? 's' : ''} au total
+                🎵 <span className="font-bold text-gray-700 dark:text-gray-300">{songs.length}</span> chanson{songs.length > 1 ? 's' : ''} au total
                 {' • '}
-                ❤️ <span className="font-bold text-pink-600">{songs.filter(s => s.isFavorite).length}</span> favori{songs.filter(s => s.isFavorite).length > 1 ? 's' : ''}
+                ❤️ <span className="font-bold text-pink-600 dark:text-pink-400">{songs.filter(s => s.isFavorite).length}</span> favori{songs.filter(s => s.isFavorite).length > 1 ? 's' : ''}
                 {' • '}
-                🔊 <span className="font-bold text-purple-600">{songs.reduce((sum, s) => sum + (s.playCount || 0), 0)}</span> écoute{songs.reduce((sum, s) => sum + (s.playCount || 0), 0) > 1 ? 's' : ''}
+                🔊 <span className="font-bold text-purple-600 dark:text-purple-400">{songs.reduce((sum, s) => sum + (s.playCount || 0), 0)}</span> écoute{songs.reduce((sum, s) => sum + (s.playCount || 0), 0) > 1 ? 's' : ''}
               </p>
             </div>
           )}

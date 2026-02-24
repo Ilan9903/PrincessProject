@@ -50,11 +50,11 @@ const Reasons = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden relative">
+      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden relative transition-colors">
         <FloatingHearts />
         
         {/* Bouton Retour */}
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
         {/* Contenu Principal */}
         <div className="z-10 text-center w-full max-w-md">
@@ -62,7 +62,7 @@ const Reasons = () => {
             Pourquoi je t'aime ?
           </h1>
           
-          <p className="text-gray-500 italic mb-12">
+          <p className="text-gray-500 dark:text-gray-400 italic mb-12">
             Clique sur le cœur pour découvrir une raison...
           </p>
 
@@ -94,11 +94,11 @@ const Reasons = () => {
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.8, y: 50, opacity: 0 }}
                 transition={{ type: "spring", damping: 15 }}
-                className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-pink-100 relative"
+                className="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-pink-100 dark:border-gray-700 relative transition-colors"
                 onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique DANS la boîte
               >
                 <div className="text-4xl mb-4">✨</div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 leading-relaxed font-serif">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 leading-relaxed font-serif">
                   "{currentReason}"
                 </h3>
                 
@@ -111,7 +111,7 @@ const Reasons = () => {
                     </button>
                     <button 
                         onClick={() => setCurrentReason(null)}
-                        className="text-gray-400 text-sm hover:text-gray-600 py-2 hover:cursor-pointer"
+                        className="text-gray-400 dark:text-gray-500 text-sm hover:text-gray-600 dark:hover:text-gray-300 py-2 hover:cursor-pointer"
                     >
                         Fermer
                     </button>

@@ -80,10 +80,10 @@ const OpenWhen = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-stone-100 flex flex-col items-center justify-start p-6 overflow-y-auto font-['Playfair_Display'] relative">
+      <div className="min-h-screen bg-stone-100 dark:bg-gray-900 flex flex-col items-center justify-start p-6 overflow-y-auto font-['Playfair_Display'] relative transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-md bg-white border border-gray-100 rounded-full hover:shadow-lg transition-all">
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full hover:shadow-lg transition-all">
           🏠
         </Link>
         
@@ -93,7 +93,7 @@ const OpenWhen = () => {
               Ouvrir quand...
             </span>
           </h1>
-          <p className="text-gray-500 italic mb-8">Une lettre pour chaque moment de ta vie...</p>
+          <p className="text-gray-500 dark:text-gray-400 italic mb-8">Une lettre pour chaque moment de ta vie...</p>
 
           {/* GRILLE DES ENVELOPPES */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full px-2 pb-20">
@@ -108,26 +108,26 @@ const OpenWhen = () => {
                 whileTap={{ scale: 0.95 }}
                 animate={shakeId === msg.id ? { x: [-10, 10, -10, 10, 0], transition: { duration: 0.4 } } : {}}
                 onClick={() => handleEnvelopeClick(msg)}
-                className={`relative p-6 rounded-lg shadow-md border border-gray-200 transition-all text-left overflow-hidden hover:cursor-pointer bg-[#fdfbf7] group ${locked ? 'opacity-75' : ''}`}
+                className={`relative p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-all text-left overflow-hidden hover:cursor-pointer bg-[#fdfbf7] dark:bg-gray-800 group ${locked ? 'opacity-75' : ''}`}
               >
                 {/* Liseré de couleur en haut */}
                 <div className={`absolute top-0 left-0 w-full h-1 ${style.seal}`}></div>
 
                 <div className="flex flex-col items-center text-center gap-4 relative z-10">
                   {/* Sceau de cire simulé ou cadenas */}
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-inner text-white text-xl font-bold ${style.seal} shadow-lg ring-4 ring-white`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-inner text-white text-xl font-bold ${style.seal} shadow-lg ring-4 ring-white dark:ring-gray-700`}>
                     {locked ? '🔒' : '✉️'}
                   </div>
                   
                   <div>
                     <h3 className={`font-bold text-lg leading-tight ${style.color.split(' ')[1]}`}>{msg.title}</h3>
-                    <div className="w-16 h-px bg-gray-300 mx-auto my-3"></div>
+                    <div className="w-16 h-px bg-gray-300 dark:bg-gray-600 mx-auto my-3"></div>
                     {locked ? (
                       <p className="text-xs text-red-400 uppercase tracking-widest font-sans font-bold">
                         Déverrouillage : {formatUnlockDate(msg.lockedUntil)}
                       </p>
                     ) : (
-                      <p className="text-xs text-gray-400 uppercase tracking-widest font-sans">Scellé avec amour</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-300 uppercase tracking-widest font-sans">Scellé avec amour</p>
                     )}
                   </div>
                 </div>
@@ -155,10 +155,8 @@ const OpenWhen = () => {
                 initial={{ scale: 0.8, opacity: 0, y: 50 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.8, opacity: 0, y: 50 }}
-                className="bg-[#fdfbf7] w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-xl shadow-2xl relative p-8 border-t-8 border-red-800"
-                // Style papier ligné
+                className="bg-[#fdfbf7] dark:bg-gray-800 w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-xl shadow-2xl relative p-8 border-t-8 border-red-800 dark:border-red-600 transition-colors bg-[linear-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(75,85,99,0.3)_1px,transparent_1px)]"
                 style={{
-                  backgroundImage: 'linear-gradient(#e5e7eb 1px, transparent 1px)',
                   backgroundSize: '100% 2rem',
                   lineHeight: '2rem'
                 }}
@@ -172,7 +170,7 @@ const OpenWhen = () => {
                 </button>
 
                 <div className="flex flex-col items-center text-center">
-                  <h2 className="text-2xl font-bold text-red-800 font-serif mb-6">{selectedEnvelope.title}</h2>
+                  <h2 className="text-2xl font-bold text-red-800 dark:text-red-400 font-serif mb-6">{selectedEnvelope.title}</h2>
                   
                   {/* Image/Gif */}
                   {selectedEnvelope.imageUrl && (
@@ -183,18 +181,18 @@ const OpenWhen = () => {
 
                   {/* Le contenu du message */}
                   <div className="w-full text-left">
-                    <p className="text-gray-800 font-serif text-lg leading-loose whitespace-pre-line">
+                    <p className="text-gray-800 dark:text-gray-200 font-serif text-lg leading-loose whitespace-pre-line">
                       {selectedEnvelope.content}
                     </p>
                   </div>
 
-                  <div className="mt-8 text-center w-full pt-6 border-t border-gray-200">
-                     <p className="font-cursive text-xl text-gray-500">Ton Amour ❤️</p>
+                  <div className="mt-8 text-center w-full pt-6 border-t border-gray-200 dark:border-gray-700">
+                     <p className="font-cursive text-xl text-gray-500 dark:text-gray-400">Ton Amour ❤️</p>
                   </div>
 
                   <button 
                     onClick={() => setSelectedEnvelope(null)}
-                    className="mt-6 bg-red-800 text-white px-8 py-2 rounded-full hover:cursor-pointer font-bold shadow-md hover:bg-red-900 transition-colors text-sm uppercase tracking-widest"
+                    className="mt-6 bg-red-800 dark:bg-red-700 text-white px-8 py-2 rounded-full hover:cursor-pointer font-bold shadow-md hover:bg-red-900 dark:hover:bg-red-800 transition-colors text-sm uppercase tracking-widest"
                   >
                     Refermer la lettre
                   </button>

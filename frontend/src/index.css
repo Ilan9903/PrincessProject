@@ -1,16 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-dark-bg: #1a1a2e;
+}
+
 html {
   /* Réserve toujours l'espace pour la scrollbar pour éviter le saut */
   scrollbar-gutter: stable; 
+}
+
+html.dark {
+  background-color: #1a1a2e;
 }
 
 body {
   background-color: #fdf2f8; /* C'est le code couleur de bg-pink-50 */
   margin: 0;
   /* Optionnel : empêche le rebond élastique sur Mac/iOS pour un effet plus "App" */
-  overscroll-behavior: none; 
+  overscroll-behavior: none;
+}
+
+html.dark body {
+  background-color: #1a1a2e !important; /* Fond sombre romantique */
 }
 
 @layer utilities {
@@ -102,6 +116,11 @@ body {
   border-radius: 20px;       /* Bords bien arrondis */
   border: 2px solid transparent; /* Astuce pour créer de l'espace autour */
   background-clip: content-box;  /* Le rose est à l'intérieur de la bordure */
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #6b7280; /* gray-500 pour dark mode */
 }
 
 /* Quand on passe la souris dessus */

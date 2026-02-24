@@ -124,17 +124,17 @@ const Quiz = () => {
 
 return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] relative overflow-hidden">
+      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] relative overflow-hidden transition-colors">
         <FloatingHearts />
 
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
         {/* --- ÉCRAN DE JEU --- */}
         {!isFinished ? (
           <div className="w-full max-w-md z-10">
             
             {/* CORRECTION ICI : Le fond de la barre est maintenant bg-pink-200 (au lieu de white) */}
-            <div className="w-full bg-pink-200 rounded-full h-2.5 mb-8">
+            <div className="w-full bg-pink-200 dark:bg-gray-700 rounded-full h-2.5 mb-8">
               <div 
                 className="bg-linear-to-r from-pink-400 to-rose-500 h-2.5 rounded-full transition-all duration-500 ease-out" 
                 style={{ width: `${((currentQuestion) / questions.length) * 100}%` }}
@@ -150,11 +150,11 @@ return (
                 transition={{ duration: 0.3 }}
               >
                 {/* J'ai aussi ajusté le padding ici (pt-10) pour laisser de la place au badge */}
-                <div className="bg-white rounded-3xl shadow-xl px-6 pb-8 pt-10 border-2 border-pink-100 text-center mb-6 relative">
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-pink-100 text-pink-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-pink-200">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl px-6 pb-8 pt-10 border-2 border-pink-100 dark:border-gray-700 text-center mb-6 relative transition-colors">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-300 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-pink-200 dark:border-pink-700">
                     Question {currentQuestion + 1}/{questions.length}
                   </span>
-                  <h2 className="text-xl font-bold text-gray-800 leading-relaxed">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 leading-relaxed">
                     {questions[currentQuestion].question}
                   </h2>
                 </div>
@@ -164,7 +164,7 @@ return (
                     <button
                       key={index}
                       onClick={() => handleAnswer(option)}
-                      className="p-4 bg-white rounded-xl border-2 border-pink-50 hover:border-pink-300 hover:bg-pink-50 transition-all text-left text-gray-700 font-medium shadow-sm active:scale-95 hover:cursor-pointer"
+                      className="p-4 bg-white dark:bg-gray-700 rounded-xl border-2 border-pink-50 dark:border-gray-600 hover:border-pink-300 dark:hover:border-pink-600 hover:bg-pink-50 dark:hover:bg-gray-600 transition-all text-left text-gray-700 dark:text-gray-200 font-medium shadow-sm active:scale-95 hover:cursor-pointer"
                     >
                       {option}
                     </button>
@@ -188,13 +188,13 @@ return (
           /* --- ÉCRAN DE FIN --- */
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-            className="text-center z-10 p-8 bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-200 max-w-sm"
+            className="text-center z-10 p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-200 dark:border-pink-700 max-w-sm transition-colors"
           >
             <div className="text-6xl mb-4">{score === totalQuestions ? '🏆' : score >= totalQuestions * 0.7 ? '🎉' : '💪'}</div>
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-purple-600 mb-4">
               {score === totalQuestions ? '100% Correct !' : `${score}/${totalQuestions} Correct !`}
             </h2>
-            <p className="text-gray-600 mb-8 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
               {score === totalQuestions 
                 ? "Bravo mon amour, tu me connais vraiment par cœur. Je t'aime ! ❤️" 
                 : score >= totalQuestions * 0.7
@@ -210,7 +210,7 @@ return (
               </Link>
               <button 
                 onClick={() => window.location.reload()}
-                className="px-8 py-3 bg-white border-2 border-pink-300 text-pink-600 rounded-full font-bold hover:bg-pink-50 transition-all"
+                className="px-8 py-3 bg-white dark:bg-gray-700 border-2 border-pink-300 dark:border-pink-600 text-pink-600 dark:text-pink-400 rounded-full font-bold hover:bg-pink-50 dark:hover:bg-gray-600 transition-all"
               >
                 Recommencer 🔄
               </button>

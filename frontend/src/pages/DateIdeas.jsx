@@ -163,10 +163,10 @@ const DateIdeas = () => {
 
 return (
     <PageTransition>
-    <div className="fixed inset-0 bg-pink-50 overflow-y-auto font-['Playfair_Display']">
+    <div className="fixed inset-0 bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
       <FloatingHearts />
       
-      <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+      <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
       <div className="min-h-screen flex flex-col items-center justify-start p-6 pt-24">
         <div className="z-10 w-full max-w-md text-center">
@@ -174,20 +174,20 @@ return (
               <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-500">
                   Qu'est-ce qu'on fait ?
               </span>
-              <span className="text-gray-800">🤔</span>
+              <span className="text-gray-800 dark:text-gray-100">🤔</span>
           </h1>
 
           {/* La Carte de Résultat */}
-          <div className={`bg-white rounded-3xl shadow-xl p-8 min-h-50 flex flex-col items-center justify-center border-4 border-dashed transition-all duration-300 ${isAnimating ? 'border-purple-200 scale-95' : 'border-pink-300 scale-100'}`}>
+          <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 min-h-50 flex flex-col items-center justify-center border-4 border-dashed transition-all duration-300 ${isAnimating ? 'border-purple-200 dark:border-purple-700 scale-95' : 'border-pink-300 dark:border-pink-700 scale-100'}`}>
             
             {!idea ? (
-              <p className="text-gray-400 italic">Clique sur le bouton pour lancer la roue !</p>
+              <p className="text-gray-400 dark:text-gray-500 italic">Clique sur le bouton pour lancer la roue !</p>
             ) : (
               <div className="animate-fade-in flex flex-col items-center gap-4">
                 <span className={`px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${idea.color}`}>
                   {idea.type}
                 </span>
-                <p className="text-2xl md:text-3xl font-bold text-gray-800 leading-relaxed">
+                <p className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 leading-relaxed">
                   {idea.text}
                 </p>
               </div>
@@ -209,7 +209,7 @@ return (
             {idea && !isAnimating && (
               <button 
                 onClick={handlePlanIdea}
-                className="px-8 py-4 bg-white border-2 border-pink-300 text-pink-600 font-bold rounded-full shadow-md hover:-translate-y-1 transition-all active:scale-95 w-full hover:bg-pink-50"
+                className="px-8 py-4 bg-white dark:bg-gray-700 border-2 border-pink-300 dark:border-gray-600 text-pink-600 dark:text-pink-400 font-bold rounded-full shadow-md hover:-translate-y-1 transition-all active:scale-95 w-full hover:bg-pink-50 dark:hover:bg-gray-600"
               >
                 <span className="flex items-center justify-center gap-2 text-lg">
                   📅 Planifier cette date
@@ -222,19 +222,19 @@ return (
         {/* Prochaines dates planifiées */}
         {!loading && upcomingEvents.length > 0 && (
           <div className="z-10 w-full max-w-md mt-16 mb-8">
-            <h2 className="text-2xl font-bold text-gray-700 mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-200 mb-6 flex items-center gap-2">
               📆 Prochaines dates
             </h2>
             <div className="space-y-4">
               {upcomingEvents.slice(0, 5).map(event => (
                 <div 
                   key={event.id}
-                  className="bg-white rounded-2xl shadow-md p-5 border-l-4 border-purple-400 hover:shadow-lg transition-shadow"
+                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-5 border-l-4 border-purple-400 dark:border-purple-600 hover:shadow-lg transition-shadow"
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 text-lg mb-1">{event.title}</h3>
-                      <p className="text-sm text-gray-500 flex items-center gap-2">
+                      <h3 className="font-bold text-gray-800 dark:text-gray-100 text-lg mb-1">{event.title}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                         🗓️ {new Date(event.date).toLocaleDateString('fr-FR', { 
                           weekday: 'long', 
                           year: 'numeric', 
@@ -243,7 +243,7 @@ return (
                         })}
                       </p>
                       {event.description && (
-                        <p className="text-sm text-gray-600 mt-2">{event.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">{event.description}</p>
                       )}
                     </div>
                     <button

@@ -3,8 +3,7 @@ import logger from '../utils/logger.js';
 import { tokenBlacklist } from '../utils/tokenBlacklist.js';
 
 export const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = req.cookies.princess_token;
 
   if (!token) {
     logger.warn('Tentative d\'accès sans token', { ip: req.ip, path: req.path });

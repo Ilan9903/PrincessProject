@@ -40,11 +40,11 @@ const OurStory = () => {
 
   return (
     <PageTransition>
-    <div className="min-h-screen bg-pink-50 font-['Playfair_Display'] overflow-x-hidden">
+    <div className="min-h-screen bg-pink-50 dark:bg-gray-900 font-['Playfair_Display'] overflow-x-hidden transition-colors">
       <FloatingHearts />
       
       {/* Bouton Retour */}
-      <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 rounded-full hover:shadow-lg">🏠</Link>
+      <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
 
       <div className="container mx-auto px-4 py-12 relative z-10 max-w-2xl">
         
@@ -53,7 +53,7 @@ const OurStory = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-rose-600 mb-4 py-2">
             Notre Histoire
           </h1>
-          <p className="text-gray-500 italic">Chaque étape à tes côtés est mon moment préféré.</p>
+          <p className="text-gray-500 dark:text-gray-400 italic">Chaque étape à tes côtés est mon moment préféré.</p>
         </div>
 
         {/* La Timeline */}
@@ -74,7 +74,7 @@ const OurStory = () => {
 
                 {/* La Carte Souvenir */}
                 <div className="ml-12 md:ml-0 w-full md:w-5/12 group">
-                  <div className="bg-white p-4 rounded-2xl shadow-lg border-2 border-pink-50 hover:border-pink-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg border-2 border-pink-50 dark:border-gray-700 hover:border-pink-200 dark:hover:border-pink-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                     
                     {/* Date */}
                     <span className="inline-block px-3 py-1 bg-pink-100 text-pink-600 text-xs font-bold rounded-full mb-3">
@@ -92,8 +92,8 @@ const OurStory = () => {
                     </div>
 
                     {/* Contenu */}
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">{memory.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed font-sans">
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">{memory.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed font-sans">
                       {memory.description}
                     </p>
                   </div>
@@ -105,7 +105,7 @@ const OurStory = () => {
 
           {/* Fin de timeline */}
           <div className="text-center mt-12 pb-8">
-            <span className="inline-block px-4 py-2 bg-white rounded-full text-pink-400 text-sm shadow-sm border border-pink-100">
+            <span className="inline-block px-4 py-2 bg-white dark:bg-gray-800 rounded-full text-pink-400 dark:text-pink-500 text-sm shadow-sm border border-pink-100 dark:border-gray-700">
               À suivre... ✨
             </span>
           </div>

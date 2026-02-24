@@ -20,18 +20,23 @@ const options = {
         
         ## Sécurité
         - Rate limiting : 100 requêtes / 15 minutes
-        - CORS configuré
+        - CORS configuré avec credentials
         - Headers sécurisés (Helmet)
         - Validation des données (Joi)
+        - Cookies HttpOnly pour JWT (protection XSS)
         
         ## Authentification
         Toutes les routes (sauf /health et /auth/login) nécessitent un token JWT.
         
-        **Pour obtenir un token :**
+        **L'API utilise des cookies HttpOnly** :
+        - Le token JWT est stocké dans un cookie sécurisé
+        - Pas besoin d'Authorization header
+        - Les cookies sont envoyés automatiquement avec credentials: 'include'
+        
+        **Note pour Swagger UI** (test uniquement) :
         1. POST /api/auth/login avec le mot de passe
-        2. Copier le token reçu
-        3. Utiliser "Authorize" en haut à droite
-        4. Entrer : Bearer VOTRE_TOKEN
+        2. Le cookie est défini automatiquement
+        3. Les requêtes suivantes incluront le cookie
       `,
       contact: {
         name: 'Support API',
@@ -48,7 +53,7 @@ const options = {
         description: 'Serveur de développement'
       },
       {
-        url: 'https://api.princess-project.com/api',
+        url: 'https://princessapi.onrender.com/api',
         description: 'Serveur de production'
       }
     ],

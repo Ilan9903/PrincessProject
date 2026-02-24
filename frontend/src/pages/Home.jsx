@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import FloatingHearts from '../components/FloatingHearts';
 import RelationshipCounter from '../components/RelationshipCounter';
@@ -7,7 +7,6 @@ import { logout } from '../Utils/api';
 import babawa from '../assets/profile.jpg';
 
 const Home = () => {
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
@@ -17,14 +16,14 @@ const Home = () => {
   return (
     <PageTransition>
       {/* CONTENEUR PRINCIPAL : Bloqué à la hauteur de l'écran (100dvh) */}
-      <div className="h-dvh w-full bg-pink-50 flex flex-col items-center justify-between overflow-hidden relative font-['Playfair_Display']">
+      <div className="h-dvh w-full bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-between overflow-hidden relative font-['Playfair_Display'] transition-colors duration-300">
         
         <FloatingHearts />
 
         {/* Bouton de Déconnexion */}
         <button 
           onClick={handleLogout} 
-          className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-xl border border-pink-100 rounded-full hover:shadow-lg bg-white/50 backdrop-blur-sm transition-all hover:cursor-pointer"
+          className="absolute top-6 left-6 text-gray-400 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400 z-50 p-2 text-2xl active:scale-95 shadow-xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm transition-all hover:cursor-pointer"
         >
           🔒
         </button>
@@ -38,7 +37,7 @@ const Home = () => {
             </h1>
             
             <div className="flex items-center justify-center gap-4 mt-4 mb-2">
-                <p className="text-lg text-gray-600 italic font-serif">for my wife</p>
+                <p className="text-lg text-gray-600 dark:text-gray-300 italic font-serif transition-colors">for my wife</p>
                 <div className="relative group cursor-default">
                     <div className="absolute -inset-1 bg-linear-to-tr from-pink-400 to-yellow-300 rounded-full blur-md opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-slow"></div>
                     <img
@@ -65,12 +64,12 @@ const Home = () => {
               <div className="grid grid-cols-1 gap-4 w-full font-serif">
                 
                 {/* 1. Bouton Valentine */}
-                <Link to="/valentine" className="group relative block p-4 bg-white rounded-2xl border-2 border-pink-100 transition-all duration-300 hover:border-red-300 hover:shadow-xl hover:shadow-red-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/valentine" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-pink-100 dark:border-gray-700 transition-all duration-300 hover:border-red-300 hover:shadow-xl hover:shadow-red-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-red-50 p-3 rounded-xl text-2xl group-hover:rotate-6 transition-transform duration-300 group-hover:scale-110">💌</div>
+                    <div className="bg-red-50 dark:bg-red-900/30 p-3 rounded-xl text-2xl group-hover:rotate-6 transition-transform duration-300 group-hover:scale-110">💌</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-red-600 transition-colors">La Demande</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-red-400">Question très importante...</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">La Demande</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-red-400">Question très importante...</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-red-400">→</div>
                   </div>
@@ -78,108 +77,108 @@ const Home = () => {
                 </Link>
 
                 {/* 2. Bouton Idée de Date */}
-                <Link to="/date-ideas" className="group relative block p-4 bg-white rounded-2xl border-2 border-purple-100 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/date-ideas" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-purple-100 dark:border-gray-700 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-purple-50 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300">🎲</div>
+                    <div className="bg-purple-50 dark:bg-purple-900/30 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300">🎲</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Idée de Date</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-purple-400">Pour ne jamais s'ennuyer ✨</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Idée de Date</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-purple-400">Pour ne jamais s'ennuyer ✨</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-purple-400">→</div>
                   </div>
                 </Link>
 
                 {/* 3. Bouton Ouvrir Quand... */}
-                <Link to="/open-when" className="group relative block p-4 bg-white rounded-2xl border-2 border-blue-100 transition-all duration-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/open-when" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-blue-100 dark:border-gray-700 transition-all duration-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-blue-50 p-3 rounded-xl text-2xl group-hover:-rotate-12 transition-transform duration-300">📬</div>
+                    <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl text-2xl group-hover:-rotate-12 transition-transform duration-300">📬</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Ouvrir quand...</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-blue-400">Des mots doux pour chaque humeur</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Ouvrir quand...</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-blue-400">Des mots doux pour chaque humeur</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-blue-400">→</div>
                   </div>
                 </Link>
 
                 {/* 4. Bouton Notre Histoire */}
-                <Link to="/our-story" className="group relative block p-4 bg-white rounded-2xl border-2 border-rose-100 transition-all duration-300 hover:border-rose-400 hover:shadow-xl hover:shadow-rose-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/our-story" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-rose-100 dark:border-gray-700 transition-all duration-300 hover:border-rose-400 hover:shadow-xl hover:shadow-rose-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-rose-50 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">📸</div>
+                    <div className="bg-rose-50 dark:bg-rose-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">📸</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-rose-600 transition-colors">Notre Histoire</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-rose-400">Nos plus beaux souvenirs</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">Notre Histoire</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-rose-400">Nos plus beaux souvenirs</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-rose-400">→</div>
                   </div>
                 </Link>
 
                 {/* 5. Bouton 100 Raisons */}
-                <Link to="/reasons" className="group relative block p-4 bg-white rounded-2xl border-2 border-yellow-100 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl hover:shadow-yellow-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/reasons" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-yellow-100 dark:border-gray-700 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl hover:shadow-yellow-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-yellow-50 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300 group-hover:scale-110">✨</div>
+                    <div className="bg-yellow-50 dark:bg-yellow-900/30 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300 group-hover:scale-110">✨</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-yellow-600 transition-colors">Pourquoi toi ?</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-yellow-500">Petite dose d'amour quotidienne</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">Pourquoi toi ?</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-yellow-500 dark:group-hover:text-yellow-400">Petite dose d'amour quotidienne</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-yellow-400">→</div>
                   </div>
                 </Link>
 
                 {/* 6. NOUVEAU : Bons Cadeaux (Remplace Planning) */}
-                <Link to="/coupons" className="group relative block p-4 bg-white rounded-2xl border-2 border-indigo-100 transition-all duration-300 hover:border-indigo-400 hover:shadow-xl hover:shadow-indigo-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/coupons" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 transition-all duration-300 hover:border-indigo-400 hover:shadow-xl hover:shadow-indigo-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-indigo-50 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300">🎟️</div>
+                    <div className="bg-indigo-50 dark:bg-indigo-900/30 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300">🎟️</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">Bons Cadeaux</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-indigo-400">Tes tickets magiques à utiliser</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Bons Cadeaux</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-indigo-400">Tes tickets magiques à utiliser</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-indigo-400">→</div>
                   </div>
                 </Link>
 
                 {/* 7. LA ROUE DU DESTIN (Remplace To-Do List) */}
-                <Link to="/wheel" className="group relative block p-4 bg-white rounded-2xl border-2 border-emerald-100 transition-all duration-300 hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/wheel" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-emerald-100 dark:border-gray-700 transition-all duration-300 hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-emerald-50 p-3 rounded-xl text-2xl group-hover:rotate-180 transition-transform duration-700">🎡</div>
+                    <div className="bg-emerald-50 dark:bg-emerald-900/30 p-3 rounded-xl text-2xl group-hover:rotate-180 transition-transform duration-700">🎡</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">La Roue du Soir</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-emerald-400">Pour les soirées indécises</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">La Roue du Soir</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-emerald-400">Pour les soirées indécises</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-emerald-400">→</div>
                   </div>
                 </Link>
 
                 {/* 8. LE QUIZ DE L'AMOUR */}
-                <Link to="/quiz" className="group relative block p-4 bg-white rounded-2xl border-2 border-orange-100 transition-all duration-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/quiz" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-orange-100 dark:border-gray-700 transition-all duration-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-orange-50 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🧠</div>
+                    <div className="bg-orange-50 dark:bg-orange-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🧠</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-orange-600 transition-colors">Le Quiz</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-orange-400">Est-ce que tu me connais bien ?</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">Le Quiz</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-orange-400">Est-ce que tu me connais bien ?</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-orange-400">→</div>
                   </div>
                 </Link>
 
                 {/* 9. TICKET À GRATTER */}
-                <Link to="/scratch" className="group relative block p-4 bg-white rounded-2xl border-2 border-yellow-100 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl hover:shadow-yellow-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/scratch" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-yellow-100 dark:border-gray-700 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl hover:shadow-yellow-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-yellow-50 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🍀</div>
+                    <div className="bg-yellow-50 dark:bg-yellow-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🍀</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-yellow-600 transition-colors">Ticket Surprise</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-yellow-400">Tente ta chance !</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">Ticket Surprise</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-yellow-400">Tente ta chance !</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-yellow-400">→</div>
                   </div>
                 </Link>
 
                 {/* 10. NOTRE PLAYLIST */}
-                <Link to="/playlist" className="group relative block p-4 bg-white rounded-2xl border-2 border-purple-100 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <Link to="/playlist" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-purple-100 dark:border-gray-700 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-purple-50 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🎶</div>
+                    <div className="bg-purple-50 dark:bg-purple-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🎶</div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Notre Playlist</h2>
-                      <p className="text-gray-500 text-xs group-hover:text-purple-400">Les chansons qui nous accompagnent</p>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Notre Playlist</h2>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-purple-400">Les chansons qui nous accompagnent</p>
                     </div>
                     <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-purple-400">→</div>
                   </div>
@@ -193,7 +192,7 @@ const Home = () => {
         {/* mb-20 pour laisser de la place au Lecteur Musique en bas */}
         <div className="shrink-0 pb-6 text-center z-10 w-full">
             <RelationshipCounter />
-            <div className="text-gray-400 text-xs font-sans mt-2">Développé avec ❤️ par ton chéri</div>
+            <div className="text-gray-400 dark:text-gray-500 text-xs font-sans mt-2 transition-colors">Développé avec ❤️ par ton chéri</div>
         </div>
 
       </div>

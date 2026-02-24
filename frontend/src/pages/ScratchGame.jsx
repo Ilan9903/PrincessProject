@@ -152,20 +152,20 @@ const ScratchGame = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden relative">
+      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden relative transition-colors">
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-pink-500 z-50 text-2xl bg-white/50 p-2 rounded-full backdrop-blur-sm">
+        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-pink-500 z-50 text-2xl bg-white/50 dark:bg-gray-800 p-2 rounded-full backdrop-blur-sm border border-pink-100 dark:border-gray-700 transition-colors">
           🏠
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-2 z-10">Secret du Jour</h1>
-        <p className="text-gray-500 mb-8 z-10">Gratte la carte pour découvrir ta surprise...</p>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 z-10">Secret du Jour</h1>
+        <p className="text-gray-500 dark:text-gray-400 mb-8 z-10">Gratte la carte pour découvrir ta surprise...</p>
 
         {/* --- ZONE DE JEU --- */}
-        <div className="relative w-full max-w-sm aspect-4/5 rounded-3xl shadow-2xl overflow-hidden border-8 border-white bg-white">
+        <div className="relative w-full max-w-sm aspect-4/5 rounded-3xl shadow-2xl overflow-hidden border-8 border-white dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors">
           
           {/* COUCHE DU DESSOUS (LE SECRET DU JOUR) */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-pink-100 p-6 text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-pink-100 dark:bg-gray-700 p-6 text-center transition-colors">
             
             {/* Image secrète DYNAMIQUE */}
             <motion.img 
@@ -182,8 +182,8 @@ const ScratchGame = () => {
                 animate={isRevealed ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.5 }}
             >
-                <h2 className="text-2xl font-bold text-pink-600">{todaysSecret.text}</h2>
-                <p className="text-xs text-gray-400 mt-2">(Reviens demain pour un autre ! 📅)</p>
+                <h2 className="text-2xl font-bold text-pink-600 dark:text-pink-400">{todaysSecret.text}</h2>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">(Reviens demain pour un autre ! 📅)</p>
             </motion.div>
           </div>
 
@@ -200,7 +200,7 @@ const ScratchGame = () => {
             <motion.button 
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 onClick={resetGame}
-                className="mt-8 px-6 py-2 bg-white text-pink-500 rounded-full font-bold shadow-md text-sm hover:bg-pink-50 transition-colors z-30 hover:cursor-pointer"
+                className="mt-8 px-6 py-2 bg-white dark:bg-gray-700 text-pink-500 dark:text-pink-400 rounded-full font-bold shadow-md text-sm hover:bg-pink-50 dark:hover:bg-gray-600 transition-colors z-30 hover:cursor-pointer"
             >
                 🔄 Revoir le secret
             </motion.button>
