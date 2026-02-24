@@ -73,12 +73,26 @@ router.post('/login', async (req, res, next) => {
     });
 
     // Envoyer le token dans un cookie HttpOnly
-    res.cookie('princess_token', token, {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    const cookieOptions = {
       httpOnly: true, // Inaccessible depuis JavaScript
-      secure: process.env.NODE_ENV === 'production', // HTTPS seulement en production
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Protection CSRF
+      secure: isProduction, // HTTPS obligatoire en production
+      sameSite: isProduction ? 'none' : 'lax', // 'none' requis pour cross-domain
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
       path: '/'
+    };
+    
+    res.cookie('princess_token', token, cookieOptions);
+
+    // Logs détaillés pour debug production
+    console.log('🍪 LOGIN - Configuration:', {
+      NODE_ENV: process.env.NODE_ENV,
+      isProduction,
+      cookieOptions,
+      tokenLength: token.length,
+      origin: req.headers.origin || 'no-origin',
+      host: req.headers.host
     });
 
     res.json({
@@ -136,9 +150,26 @@ router.get('/verify', async (req, res, next) => {
   try {
     const token = req.cookies.princess_token;
 
+    // Logs détaillés pour debug production
+    console.log('🔍 VERIFY - Debug:', {
+      NODE_ENV: process.env.NODE_ENV,
+      hasCookies: Object.keys(req.cookies).length > 0,
+      cookieNames: Object.keys(req.cookies),
+      hasToken: !!token,
+      origin: req.headers.origin || 'no-origin',
+      host: req.headers.host,
+      userAgent: req.headers['user-agent']?.substring(0, 50) || 'unknown'
+    });
+
     if (!token) {
+      console.log('❌ VERIFY - Token manquant');
       return res.status(401).json({ 
-        error: 'Token manquant' 
+        error: 'Token manquant',
+        debug: {
+          NODE_ENV: process.env.NODE_ENV,
+          hasCookies: Object.keys(req.cookies).length > 0,
+          cookieNames: Object.keys(req.cookies)
+        }
       });
     }
 
@@ -221,11 +252,12 @@ router.post('/logout', async (req, res, next) => {
       ip: req.ip 
     });
 
-    // Supprimer le cookie
+    // Supprimer le cookie avec les MÊMES options que lors de la création
+    const isProduction = process.env.NODE_ENV === 'production';
     res.clearCookie('princess_token', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/'
     });
 

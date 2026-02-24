@@ -18,6 +18,7 @@ app.set('trust proxy', 1);
 
 // 🔍 DEBUG : Vérifier les variables d'environnement au démarrage
 console.log('✅ .env chargé');
+console.log('🌍 NODE_ENV:', process.env.NODE_ENV || 'development (par défaut)');
 console.log('🔐 APP_PASSWORD:', process.env.APP_PASSWORD ? '✓ Défini' : '✗ Manquant');
 console.log('🔑 JWT_SECRET:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Manquant');
 console.log('🔥 FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? '✓ Défini' : '✗ Manquant');
