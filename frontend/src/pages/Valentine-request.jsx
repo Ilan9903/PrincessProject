@@ -33,11 +33,16 @@ const ValentineRequest = () => {
 
   const handleYes = async () => {
     try {
+      const today = new Date();
+      const dateStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      
       await authenticatedFetch('/api/valentine', {
         method: 'POST',
         body: JSON.stringify({ 
-          answer: 'OUI', 
-          timestamp: new Date() 
+          title: 'Tu es coincée avec moi !',
+          description: '(Rendez-vous le 14 Février ❤️)',
+          date: dateStr,
+          imageUrl: IMG_ASK
         })
       });
     } catch (error) {
