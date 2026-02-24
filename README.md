@@ -690,9 +690,9 @@ ISC License - Voir [LICENSE](LICENSE) pour plus de détails.
 
 ## 📞 Support
 
-- **Issues** : [GitHub Issues](https://github.com/yourusername/princess-project/issues)
+- **Issues** : [GitHub Issues](https://github.com/Ilan9903/princess-project/issues)
 - **Documentation** : Voir les fichiers .md dans le repository
-- **Email** : your.email@example.com
+- **Email** : i.arfipro@outlook.fr
 
 ---
 
