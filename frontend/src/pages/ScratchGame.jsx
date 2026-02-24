@@ -148,7 +148,7 @@ const ScratchGame = () => {
         canvas.removeEventListener('touchend', endDraw);
       }
     };
-  }, []); 
+  }, [gameKey]); // Se relance quand gameKey change (après reset)
 
   return (
     <PageTransition>
