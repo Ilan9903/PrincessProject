@@ -17,7 +17,7 @@ const Coupons = () => {
       try {
         const response = await authenticatedFetch('/api/coupons');
         const data = await response.json();
-        setCoupons(data.coupons || []);
+        setCoupons(data || []);
       } catch (error) {
         console.error('Erreur chargement coupons:', error);
       } finally {

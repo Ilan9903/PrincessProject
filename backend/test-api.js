@@ -363,11 +363,13 @@ async function testPlanning() {
     // Test 4b: Filtre upcoming
     const upcomingRes = await axios.get(`${BASE_URL}/planning?upcoming=true`, { headers });
     assert(Array.isArray(upcomingRes.data), 'Doit retourner un tableau');
-    // Vérifier que toutes les dates sont futures
-    const now = new Date();
+    // Vérifier que toutes les dates sont futures ou aujourd'hui
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Mettre à minuit pour comparer seulement les dates
     upcomingRes.data.forEach(event => {
       const eventDate = new Date(event.date);
-      assert(eventDate >= now || event.date === '2026-12-31', 'Événements à venir doivent être dans le futur');
+      eventDate.setHours(0, 0, 0, 0);
+      assert(eventDate >= today, `Événement ${event.title} (${event.date}) doit être aujourd'hui ou dans le futur`);
     });
     logSuccess('/planning?upcoming=true', 'GET', `(${upcomingRes.data.length} à venir)`);
     
@@ -416,7 +418,7 @@ async function testCoupons() {
       title: 'Test Coupon',
       description: 'Description test',
       type: 'massage',
-      expiryDate: '2026-12-31'
+      expirationDate: '2026-12-31'
     }, { headers });
     
     assertExists(createRes.data.id, 'id');
@@ -428,7 +430,7 @@ async function testCoupons() {
       title: 'Expired Coupon',
       description: 'Déjà expiré',
       type: 'massage',
-      expiryDate: '2024-01-01' // Date passée
+      expirationDate: '2024-01-01' // Date passée
     }, { headers });
     
     assertExists(expiredRes.data.id, 'id pour coupon expiré');

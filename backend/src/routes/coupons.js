@@ -16,7 +16,7 @@ const couponSchema = Joi.object({
   }),
   description: Joi.string().allow('').optional(),
   type: Joi.string().valid('massage', 'restaurant', 'cinema', 'experience', 'other').default('experience'),
-  expiryDate: Joi.string().isoDate().optional().allow(null, '')
+  expirationDate: Joi.string().isoDate().optional().allow(null, '')
 });
 
 /**
@@ -94,14 +94,15 @@ const couponSchema = Joi.object({
 router.post('/', authenticateToken, validate(couponSchema), async (req, res, next) => {
   try {
     const db = getDb();
-    const { title, description, type, expiryDate } = req.body;
+    const { title, description, type, expirationDate } = req.body;
     
     const couponData = {
       title,
       description: description || '',
       type: type || 'experience',
       status: 'available',
-      expiryDate: expiryDate || null,
+      isRedeemed: false,
+      expirationDate: expirationDate || null,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       redeemedAt: null
     };
@@ -201,7 +202,7 @@ router.get('/', authenticateToken, async (req, res, next) => {
       ip: req.ip 
     });
 
-    res.json({ coupons });
+    res.json(coupons);
   } catch (error) {
     logger.error('Erreur récupération coupons', { 
       error: error.message,
@@ -255,7 +256,7 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
     
     // Vérifier si expiré
     let currentStatus = data.status;
-    if (data.expiryDate && new Date(data.expiryDate) < new Date() && data.status === 'available') {
+    if (data.expirationDate && new Date(data.expirationDate) < new Date() && data.status === 'available') {
       currentStatus = 'expired';
     }
 
@@ -329,7 +330,7 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
 router.put('/:id', authenticateToken, validate(couponSchema), async (req, res, next) => {
   try {
     const db = getDb();
-    const { title, description, type, expiryDate } = req.body;
+    const { title, description, type, expirationDate } = req.body;
     
     // Vérifier que le coupon existe
     const docRef = db.collection('coupons').doc(req.params.id);
@@ -350,7 +351,7 @@ router.put('/:id', authenticateToken, validate(couponSchema), async (req, res, n
     
     // Ajouter les champs optionnels
     if (description !== undefined) updateData.description = description;
-    if (expiryDate !== undefined) updateData.expiryDate = expiryDate;
+    if (expirationDate !== undefined) updateData.expirationDate = expirationDate;
     
     await docRef.update(updateData);
 
@@ -432,6 +433,7 @@ router.patch('/:id/redeem', authenticateToken, async (req, res, next) => {
 
     // Marquer comme utilisé
     await docRef.update({
+      status: 'redeemed',
       isRedeemed: true,
       redeemedAt: admin.firestore.FieldValue.serverTimestamp()
     });
@@ -505,6 +507,7 @@ router.patch('/:id/reset', authenticateToken, async (req, res, next) => {
     // Réinitialiser le coupon
     await docRef.update({
       status: 'available',
+      isRedeemed: false,
       redeemedAt: null
     });
 
