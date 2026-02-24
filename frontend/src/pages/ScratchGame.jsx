@@ -42,6 +42,29 @@ const ScratchGame = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secrets]);
 
+  // Fonction pour réinitialiser le jeu sans recharger la page
+  const resetGame = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    // Réinitialiser l'opacité et l'état
+    canvas.style.opacity = '1';
+    canvas.style.transition = '';
+    setIsRevealed(false);
+    
+    // Redessiner le canvas
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = '#cbd5e1'; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.font = 'bold 24px "Playfair Display"';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText("✨ Gratte ici ! ✨", canvas.width / 2, canvas.height / 2);
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -192,7 +215,7 @@ const ScratchGame = () => {
         {isRevealed && (
             <motion.button 
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                onClick={() => window.location.reload()}
+                onClick={resetGame}
                 className="mt-8 px-6 py-2 bg-white text-pink-500 rounded-full font-bold shadow-md text-sm hover:bg-pink-50 transition-colors z-30 hover:cursor-pointer"
             >
                 🔄 Revoir le secret
