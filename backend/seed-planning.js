@@ -6,6 +6,13 @@ const seedPlanning = async () => {
     const db = getDb();
     console.log('✅ Connecté avec succès');
     
+    // 🗑️ Supprimer tous les anciens événements
+    console.log('🗑️ Suppression des anciens événements...');
+    const existingEvents = await db.collection('planning').get();
+    const deletePromises = existingEvents.docs.map(doc => doc.ref.delete());
+    await Promise.all(deletePromises);
+    console.log(`✅ ${existingEvents.size} ancien(s) événement(s) supprimé(s)`);
+    
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);

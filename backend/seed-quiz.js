@@ -6,6 +6,13 @@ const seedQuiz = async () => {
     const db = getDb();
     console.log('✅ Connecté avec succès');
     
+    // 🗑️ Supprimer toutes les anciennes questions
+    console.log('🗑️ Suppression des anciennes questions...');
+    const existingQuestions = await db.collection('quiz').get();
+    const deletePromises = existingQuestions.docs.map(doc => doc.ref.delete());
+    await Promise.all(deletePromises);
+    console.log(`✅ ${existingQuestions.size} ancienne(s) question(s) supprimée(s)`);
+    
     const questions = [
       {
         question: "Où nous sommes-nous embrassés pour la première fois ?",

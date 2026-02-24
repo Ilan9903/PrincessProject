@@ -6,6 +6,13 @@ const seedPlaylist = async () => {
     const db = getDb();
     console.log('✅ Connecté avec succès');
     
+    // 🗑️ Supprimer toutes les anciennes chansons
+    console.log('🗑️ Suppression des anciennes chansons...');
+    const existingSongs = await db.collection('playlist').get();
+    const deletePromises = existingSongs.docs.map(doc => doc.ref.delete());
+    await Promise.all(deletePromises);
+    console.log(`✅ ${existingSongs.size} ancienne(s) chanson(s) supprimée(s)`);
+    
     const songs = [
       {
         title: "Perfect",

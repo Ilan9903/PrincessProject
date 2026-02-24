@@ -6,6 +6,13 @@ const seedMessages = async () => {
     const db = getDb();
     console.log('✅ Connecté avec succès');
 
+    // 🗑️ Supprimer tous les anciens messages
+    console.log('🗑️ Suppression des anciens messages...');
+    const existingMessages = await db.collection('messages').get();
+    const deletePromises = existingMessages.docs.map(doc => doc.ref.delete());
+    await Promise.all(deletePromises);
+    console.log(`✅ ${existingMessages.size} ancien(s) message(s) supprimé(s)`);
+
 const messagesData = [
   {
     title: "Quand tu es triste 😢",

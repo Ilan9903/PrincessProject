@@ -6,6 +6,13 @@ const seedCoupons = async () => {
     const db = getDb();
     console.log('✅ Connecté avec succès');
 
+    // 🗑️ Supprimer tous les anciens coupons
+    console.log('🗑️ Suppression des anciens coupons...');
+    const existingCoupons = await db.collection('coupons').get();
+    const deletePromises = existingCoupons.docs.map(doc => doc.ref.delete());
+    await Promise.all(deletePromises);
+    console.log(`✅ ${existingCoupons.size} ancien(s) coupon(s) supprimé(s)`);
+
 const couponsData = [
   { 
     title: "Massage VIP", 
