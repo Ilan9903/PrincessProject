@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
@@ -54,7 +54,7 @@ const Reasons = () => {
         <FloatingHearts />
         
         {/* Bouton Retour */}
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+        <HomeButton />
 
         {/* Contenu Principal */}
         <div className="z-10 text-center w-full max-w-md">

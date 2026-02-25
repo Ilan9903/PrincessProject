@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -127,7 +128,7 @@ return (
       <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] relative overflow-hidden transition-colors">
         <FloatingHearts />
 
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+        <HomeButton />
 
         {/* --- ÉCRAN DE JEU --- */}
         {!isFinished ? (

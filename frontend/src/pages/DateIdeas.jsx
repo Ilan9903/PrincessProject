@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 import FloatingHearts from '../components/FloatingHearts';
 import { authenticatedFetch } from '../Utils/api';
 
@@ -166,7 +166,7 @@ return (
     <div className="fixed inset-0 bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
       <FloatingHearts />
       
-      <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+      <HomeButton />
 
       <div className="min-h-screen flex flex-col items-center justify-start p-6 pt-24">
         <div className="z-10 w-full max-w-md text-center">

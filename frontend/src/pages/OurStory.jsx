@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 import PageTransition from '../components/PageTransition';
 import FloatingHearts from '../components/FloatingHearts';
 
@@ -44,7 +44,7 @@ const OurStory = () => {
       <FloatingHearts />
       
       {/* Bouton Retour */}
-      <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+      <HomeButton />
 
       <div className="container mx-auto px-4 py-12 relative z-10 max-w-2xl">
         

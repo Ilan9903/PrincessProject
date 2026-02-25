@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
@@ -85,7 +85,7 @@ const Coupons = () => {
       <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center p-6 font-['Playfair_Display'] relative transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+        <HomeButton />
 
         <div className="z-10 text-center mt-12 mb-8">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">Tes Bons Cadeaux</h1>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
@@ -113,7 +113,7 @@ const Playlist = () => {
       <div className="min-h-screen bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="fixed top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+        <HomeButton />
 
         <div className="container mx-auto px-6 py-24 max-w-4xl">
           {/* En-tête */}

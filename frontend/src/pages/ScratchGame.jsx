@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -154,9 +154,7 @@ const ScratchGame = () => {
     <PageTransition>
       <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6 font-['Playfair_Display'] overflow-hidden relative transition-colors">
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-pink-500 z-50 text-2xl bg-white/50 dark:bg-gray-800 p-2 rounded-full backdrop-blur-sm border border-pink-100 dark:border-gray-700 transition-colors">
-          🏠
-        </Link>
+        <HomeButton />
 
         <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 z-10">Secret du Jour</h1>
         <p className="text-gray-500 dark:text-gray-400 mb-8 z-10">Gratte la carte pour découvrir ta surprise...</p>

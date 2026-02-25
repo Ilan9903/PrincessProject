@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 import PageTransition from '../components/PageTransition';
 import { authenticatedFetch } from '../Utils/api';
 import FloatingHearts from '../components/FloatingHearts';
@@ -61,7 +62,7 @@ const ValentineRequest = () => {
     <div className="fixed inset-0 bg-pink-100 dark:bg-gray-900 flex flex-col items-center justify-center overflow-hidden font-['Playfair_Display'] transition-colors">
       <FloatingHearts />
       <ThemeToggle />
-      <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-lg border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-md bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+      <HomeButton />
       <div className="flex flex-col items-center justify-center w-full px-4 text-center z-10">
         <img src={IMG_ASK} alt="Rose cat" className="rounded-2xl shadow-lg mb-8 w-64 md:w-80 object-cover" />
         <h1 className="text-4xl md:text-5xl font-bold text-red-600 dark:text-red-400 mb-12 leading-relaxed">Veux-tu être ma Valentine ? 🌹</h1>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion'; // On ajoute Framer Motion
 import FloatingHearts from '../components/FloatingHearts';
@@ -68,7 +68,7 @@ const OpenWhen = () => {
   if (loading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-stone-100 flex items-center justify-center font-['Playfair_Display']">
+        <div className="min-h-screen bg-stone-100 dark:bg-gray-900 flex items-center justify-center font-['Playfair_Display']">
           <div className="text-center">
             <div className="text-4xl mb-4 animate-bounce">💌</div>
             <p className="text-gray-500 italic">Chargement de tes lettres...</p>
@@ -83,9 +83,7 @@ const OpenWhen = () => {
       <div className="min-h-screen bg-stone-100 dark:bg-gray-900 flex flex-col items-center justify-start p-6 overflow-y-auto font-['Playfair_Display'] relative transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full hover:shadow-lg transition-all">
-          🏠
-        </Link>
+        <HomeButton />
         
         <div className="z-10 w-full max-w-2xl mt-12 mb-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 flex items-center justify-center gap-3 py-2">

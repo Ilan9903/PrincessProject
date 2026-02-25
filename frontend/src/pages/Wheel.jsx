@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import HomeButton from '../components/HomeButton';
 // eslint-disable-next-line no-unused-vars
 import { motion, useAnimation } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
@@ -61,7 +61,7 @@ const Wheel = () => {
       <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center p-4 relative overflow-hidden font-['Playfair_Display'] transition-colors">
         <FloatingHearts />
         
-        <Link to="/" className="absolute top-6 left-6 text-gray-400 hover:text-red-500 z-50 p-2 text-2xl active:scale-95 shadow-2xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white dark:bg-gray-800 transition-colors">🏠</Link>
+        <HomeButton />
 
         <div className="text-center z-10 mb-8 mt-4">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">La Roue du Soir</h1>
