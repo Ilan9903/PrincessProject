@@ -34,7 +34,7 @@ const MusicPlayer = () => {
         onClick={togglePlay}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className={`relative w-14 h-14 flex items-center justify-center rounded-full shadow-xl border-4 border-white dark:border-gray-700 transition-all duration-500 ${isPlaying ? 'bg-pink-500 dark:bg-pink-600' : 'bg-gray-800 dark:bg-gray-700'}`}
+        className={`relative w-14 h-14 flex items-center justify-center rounded-full shadow-xl border-4 border-gray-700 dark:border-gray-600 transition-all duration-500 ${isPlaying ? 'bg-pink-500 dark:bg-pink-600' : 'bg-gray-800 dark:bg-gray-700'}`}
       >
         <span className="text-2xl text-white z-10">
           {isPlaying ? '⏸️' : '🎵'}

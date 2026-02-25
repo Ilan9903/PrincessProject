@@ -8,6 +8,24 @@ import babawa from '../assets/profile.jpg';
 
 const Home = () => {
 
+  const [showMore, setShowMore] = React.useState(false);
+
+  const mainCards = [
+    { to: '/valentine', emoji: '💌', title: 'La Demande', subtitle: 'Question très importante...' },
+    { to: '/date-ideas', emoji: '🎲', title: 'Idée de Date', subtitle: 'Pour ne jamais s\'ennuyer ✨' },
+    { to: '/open-when', emoji: '📬', title: 'Ouvrir quand...', subtitle: 'Des mots doux pour chaque humeur' },
+    { to: '/our-story', emoji: '📸', title: 'Notre Histoire', subtitle: 'Nos plus beaux souvenirs' },
+    { to: '/coupons', emoji: '🎟️', title: 'Bons Cadeaux', subtitle: 'Tes tickets magiques à utiliser' },
+    { to: '/playlist', emoji: '🎶', title: 'Notre Playlist', subtitle: 'Les chansons qui nous accompagnent' }
+  ];
+
+  const extraCards = [
+    { to: '/reasons', emoji: '✨', title: 'Pourquoi toi ?', subtitle: 'Petite dose d\'amour quotidienne' },
+    { to: '/wheel', emoji: '🎡', title: 'La Roue du Soir', subtitle: 'Pour les soirées indécises' },
+    { to: '/quiz', emoji: '🧠', title: 'Le Quiz', subtitle: 'Est-ce que tu me connais bien ?' },
+    { to: '/scratch', emoji: '🍀', title: 'Ticket Surprise', subtitle: 'Tente ta chance !' }
+  ];
+
   const handleLogout = async () => {
     await logout();
     window.location.href = '/';
@@ -51,138 +69,46 @@ const Home = () => {
         </div>
 
         {/* --- 2. ZONE SCROLLABLE DES BOUTONS --- */}
-        {/* flex-grow : Prend tout l'espace libre au milieu */}
         <div className="w-full grow flex flex-col justify-center overflow-hidden px-4 py-2 z-10 max-w-md">
-            
-            {/* La liste scrollable elle-même */}
             <div className="w-full max-h-full overflow-y-auto px-2 py-4
                 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent scroll-smooth
                 mask-[linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]
                 webkit-[mask-image:linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]"
             >
-          
               <div className="grid grid-cols-1 gap-4 w-full font-serif">
-                
-                {/* 1. Bouton Valentine */}
-                <Link to="/valentine" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-pink-100 dark:border-gray-700 transition-all duration-300 hover:border-red-300 hover:shadow-xl hover:shadow-red-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-red-50 dark:bg-red-900/30 p-3 rounded-xl text-2xl group-hover:rotate-6 transition-transform duration-300 group-hover:scale-110">💌</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">La Demande</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-red-400">Question très importante...</p>
+                {mainCards.map((card) => (
+                  <Link key={card.to} to={card.to} className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-pink-100 dark:border-gray-700 transition-all duration-300 hover:border-pink-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 overflow-hidden">
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className="bg-pink-50 dark:bg-pink-900/30 p-3 rounded-xl text-2xl transition-transform duration-300 group-hover:scale-105">{card.emoji}</div>
+                      <div>
+                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 transition-colors">{card.title}</h2>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs">{card.subtitle}</p>
+                      </div>
+                      <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-pink-400">→</div>
                     </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-red-400">→</div>
-                  </div>
-                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-0"></div>
-                </Link>
+                  </Link>
+                ))}
 
-                {/* 2. Bouton Idée de Date */}
-                <Link to="/date-ideas" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-purple-100 dark:border-gray-700 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-purple-50 dark:bg-purple-900/30 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300">🎲</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Idée de Date</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-purple-400">Pour ne jamais s'ennuyer ✨</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-purple-400">→</div>
-                  </div>
-                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowMore((prev) => !prev)}
+                  className="w-full py-3 rounded-xl border-2 border-dashed border-pink-200 dark:border-gray-700 text-sm font-semibold text-pink-600 dark:text-pink-400 bg-white/70 dark:bg-gray-800/70 hover:cursor-pointer"
+                >
+                  {showMore ? 'Voir moins' : 'Voir plus'}
+                </button>
 
-                {/* 3. Bouton Ouvrir Quand... */}
-                <Link to="/open-when" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-blue-100 dark:border-gray-700 transition-all duration-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl text-2xl group-hover:-rotate-12 transition-transform duration-300">📬</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Ouvrir quand...</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-blue-400">Des mots doux pour chaque humeur</p>
+                {showMore && extraCards.map((card) => (
+                  <Link key={card.to} to={card.to} className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-100 dark:border-gray-700 transition-all duration-300 hover:border-pink-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 overflow-hidden">
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl text-2xl transition-transform duration-300 group-hover:scale-105">{card.emoji}</div>
+                      <div>
+                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 transition-colors">{card.title}</h2>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs">{card.subtitle}</p>
+                      </div>
+                      <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-pink-400">→</div>
                     </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-blue-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 4. Bouton Notre Histoire */}
-                <Link to="/our-story" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-rose-100 dark:border-gray-700 transition-all duration-300 hover:border-rose-400 hover:shadow-xl hover:shadow-rose-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-rose-50 dark:bg-rose-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">📸</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">Notre Histoire</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-rose-400">Nos plus beaux souvenirs</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-rose-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 5. Bouton 100 Raisons */}
-                <Link to="/reasons" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-yellow-100 dark:border-gray-700 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl hover:shadow-yellow-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-yellow-50 dark:bg-yellow-900/30 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300 group-hover:scale-110">✨</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">Pourquoi toi ?</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-yellow-500 dark:group-hover:text-yellow-400">Petite dose d'amour quotidienne</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-yellow-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 6. NOUVEAU : Bons Cadeaux (Remplace Planning) */}
-                <Link to="/coupons" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 transition-all duration-300 hover:border-indigo-400 hover:shadow-xl hover:shadow-indigo-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-indigo-50 dark:bg-indigo-900/30 p-3 rounded-xl text-2xl group-hover:rotate-12 transition-transform duration-300">🎟️</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Bons Cadeaux</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-indigo-400">Tes tickets magiques à utiliser</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-indigo-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 7. LA ROUE DU DESTIN (Remplace To-Do List) */}
-                <Link to="/wheel" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-emerald-100 dark:border-gray-700 transition-all duration-300 hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-emerald-50 dark:bg-emerald-900/30 p-3 rounded-xl text-2xl group-hover:rotate-180 transition-transform duration-700">🎡</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">La Roue du Soir</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-emerald-400">Pour les soirées indécises</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-emerald-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 8. LE QUIZ DE L'AMOUR */}
-                <Link to="/quiz" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-orange-100 dark:border-gray-700 transition-all duration-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-orange-50 dark:bg-orange-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🧠</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">Le Quiz</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-orange-400">Est-ce que tu me connais bien ?</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-orange-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 9. TICKET À GRATTER */}
-                <Link to="/scratch" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-yellow-100 dark:border-gray-700 transition-all duration-300 hover:border-yellow-400 hover:shadow-xl hover:shadow-yellow-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-yellow-50 dark:bg-yellow-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🍀</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">Ticket Surprise</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-yellow-400">Tente ta chance !</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-yellow-400">→</div>
-                  </div>
-                </Link>
-
-                {/* 10. NOTRE PLAYLIST */}
-                <Link to="/playlist" className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-purple-100 dark:border-gray-700 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-200/40 hover:-translate-y-1 active:scale-95 overflow-hidden">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-purple-50 dark:bg-purple-900/30 p-3 rounded-xl text-2xl group-hover:scale-110 transition-transform duration-300">🎶</div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Notre Playlist</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs group-hover:text-purple-400">Les chansons qui nous accompagnent</p>
-                    </div>
-                    <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-purple-400">→</div>
-                  </div>
-                </Link>
+                  </Link>
+                ))}
 
               </div>
             </div>
