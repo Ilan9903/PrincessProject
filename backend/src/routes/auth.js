@@ -33,8 +33,6 @@ const router = express.Router();
  *               properties:
  *                 success:
  *                   type: boolean
- *                 token:
- *                   type: string
  *                 message:
  *                   type: string
  *       401:

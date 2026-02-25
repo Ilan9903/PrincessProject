@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react'; // <--- Import pour la PWA
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
@@ -64,9 +64,13 @@ function App() {
   // État de connexion : vérifie le JWT au chargement
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const hasCheckedAuth = useRef(false);
 
   // Vérifier la validité du token au chargement initial
   useEffect(() => {
+    if (hasCheckedAuth.current) return;
+    hasCheckedAuth.current = true;
+
     const checkTokenValidity = async () => {
       const isValid = await isAuthenticated();
       setIsAuth(isValid);

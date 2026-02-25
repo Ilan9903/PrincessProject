@@ -60,10 +60,10 @@ const options = {
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-          description: 'Entrez votre token JWT (sans "Bearer")'
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'princess_token',
+          description: 'Cookie HttpOnly JWT nommé princess_token'
         }
       },
       schemas: {

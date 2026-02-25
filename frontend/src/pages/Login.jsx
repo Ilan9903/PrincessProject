@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import FloatingHearts from '../components/FloatingHearts';
 import ThemeToggle from '../components/ThemeToggle';
-import { login, isAuthenticated } from '../Utils/api';
+import { login } from '../Utils/api';
 
 const Login = ({ onLogin }) => {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  // ✅ Rediriger si déjà authentifié
-  useEffect(() => {
-    if (isAuthenticated()) {
-      if (onLogin) onLogin();
-      navigate('/home');
-    }
-  }, [navigate, onLogin]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

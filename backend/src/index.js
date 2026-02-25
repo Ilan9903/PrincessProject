@@ -61,6 +61,12 @@ console.log('✅ CORS accepte aussi tous les domaines *.vercel.app');
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limite de 100 requêtes par IP
+  skip: (req) => {
+    if (process.env.NODE_ENV === 'test') return true;
+
+    const localhostIps = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
+    return localhostIps.includes(req.ip);
+  },
   message: 'Trop de requêtes depuis cette adresse IP, veuillez réessayer plus tard.',
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
@@ -107,10 +113,12 @@ app.get('/api-docs.json', (req, res) => {
 
 // Route de base (redirection vers la doc)
 app.get('/', (req, res) => {
+  const documentationUrl = `${req.protocol}://${req.get('host')}/api-docs`;
+
   res.json({
     message: 'Princess Project API 💖',
     version: '2.0.0',
-    documentation: `http://localhost:${PORT}/api-docs`,
+    documentation: documentationUrl,
     endpoints: {
       health: '/api/health',
       auth: '/api/auth',
