@@ -11,19 +11,19 @@ const Home = () => {
   const [showMore, setShowMore] = React.useState(false);
 
   const mainCards = [
-    { to: '/valentine', emoji: '💌', title: 'La Demande', subtitle: 'Question très importante...' },
-    { to: '/date-ideas', emoji: '🎲', title: 'Idée de Date', subtitle: 'Pour ne jamais s\'ennuyer ✨' },
-    { to: '/open-when', emoji: '📬', title: 'Ouvrir quand...', subtitle: 'Des mots doux pour chaque humeur' },
-    { to: '/our-story', emoji: '📸', title: 'Notre Histoire', subtitle: 'Nos plus beaux souvenirs' },
-    { to: '/coupons', emoji: '🎟️', title: 'Bons Cadeaux', subtitle: 'Tes tickets magiques à utiliser' },
-    { to: '/playlist', emoji: '🎶', title: 'Notre Playlist', subtitle: 'Les chansons qui nous accompagnent' }
+    { to: '/valentine',  emoji: '💌', title: 'La Demande',     subtitle: 'Question très importante...',          border: 'border-pink-100 dark:border-gray-700',  hoverBorder: 'hover:border-red-300',     hoverShadow: 'hover:shadow-red-200/40',     iconBg: 'bg-red-50 dark:bg-red-900/30',       hoverTitle: 'group-hover:text-red-600 dark:group-hover:text-red-400',     arrow: 'text-red-400',     emojiAnim: 'group-hover:rotate-6 group-hover:scale-110', shimmer: true },
+    { to: '/date-ideas', emoji: '🎲', title: 'Idée de Date',   subtitle: "Pour ne jamais s'ennuyer ✨",           border: 'border-purple-100 dark:border-gray-700', hoverBorder: 'hover:border-purple-400', hoverShadow: 'hover:shadow-purple-200/40',  iconBg: 'bg-purple-50 dark:bg-purple-900/30', hoverTitle: 'group-hover:text-purple-600 dark:group-hover:text-purple-400', arrow: 'text-purple-400', emojiAnim: 'group-hover:rotate-12' },
+    { to: '/open-when',  emoji: '📬', title: 'Ouvrir quand...', subtitle: 'Des mots doux pour chaque humeur',    border: 'border-blue-100 dark:border-gray-700',  hoverBorder: 'hover:border-blue-400',   hoverShadow: 'hover:shadow-blue-200/40',    iconBg: 'bg-blue-50 dark:bg-blue-900/30',     hoverTitle: 'group-hover:text-blue-600 dark:group-hover:text-blue-400',   arrow: 'text-blue-400',   emojiAnim: 'group-hover:-rotate-12' },
+    { to: '/our-story',  emoji: '📸', title: 'Notre Histoire', subtitle: 'Nos plus beaux souvenirs',             border: 'border-rose-100 dark:border-gray-700',  hoverBorder: 'hover:border-rose-400',   hoverShadow: 'hover:shadow-rose-200/40',    iconBg: 'bg-rose-50 dark:bg-rose-900/30',     hoverTitle: 'group-hover:text-rose-600 dark:group-hover:text-rose-400',   arrow: 'text-rose-400',   emojiAnim: 'group-hover:scale-110' },
+    { to: '/coupons',    emoji: '🎟️', title: 'Bons Cadeaux',   subtitle: 'Tes tickets magiques à utiliser',     border: 'border-indigo-100 dark:border-gray-700', hoverBorder: 'hover:border-indigo-400', hoverShadow: 'hover:shadow-indigo-200/40',  iconBg: 'bg-indigo-50 dark:bg-indigo-900/30', hoverTitle: 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400', arrow: 'text-indigo-400', emojiAnim: 'group-hover:rotate-12' },
+    { to: '/playlist',   emoji: '🎶', title: 'Notre Playlist',  subtitle: 'Les chansons qui nous accompagnent', border: 'border-purple-100 dark:border-gray-700', hoverBorder: 'hover:border-purple-400', hoverShadow: 'hover:shadow-purple-200/40',  iconBg: 'bg-purple-50 dark:bg-purple-900/30', hoverTitle: 'group-hover:text-purple-600 dark:group-hover:text-purple-400', arrow: 'text-purple-400', emojiAnim: 'group-hover:scale-110' },
   ];
 
   const extraCards = [
-    { to: '/reasons', emoji: '✨', title: 'Pourquoi toi ?', subtitle: 'Petite dose d\'amour quotidienne' },
-    { to: '/wheel', emoji: '🎡', title: 'La Roue du Soir', subtitle: 'Pour les soirées indécises' },
-    { to: '/quiz', emoji: '🧠', title: 'Le Quiz', subtitle: 'Est-ce que tu me connais bien ?' },
-    { to: '/scratch', emoji: '🍀', title: 'Ticket Surprise', subtitle: 'Tente ta chance !' }
+    { to: '/reasons', emoji: '✨', title: 'Pourquoi toi ?',   subtitle: "Petite dose d'amour quotidienne", border: 'border-yellow-100 dark:border-gray-700',  hoverBorder: 'hover:border-yellow-400',  hoverShadow: 'hover:shadow-yellow-200/40',  iconBg: 'bg-yellow-50 dark:bg-yellow-900/30',   hoverTitle: 'group-hover:text-yellow-600 dark:group-hover:text-yellow-400', arrow: 'text-yellow-400', emojiAnim: 'group-hover:rotate-12 group-hover:scale-110' },
+    { to: '/wheel',   emoji: '🎡', title: 'La Roue du Soir', subtitle: 'Pour les soirées indécises',         border: 'border-emerald-100 dark:border-gray-700', hoverBorder: 'hover:border-emerald-400', hoverShadow: 'hover:shadow-emerald-200/40', iconBg: 'bg-emerald-50 dark:bg-emerald-900/30', hoverTitle: 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400', arrow: 'text-emerald-400', emojiAnim: 'group-hover:rotate-180 duration-700' },
+    { to: '/quiz',    emoji: '🧠', title: 'Le Quiz',          subtitle: 'Est-ce que tu me connais bien ?',  border: 'border-orange-100 dark:border-gray-700',  hoverBorder: 'hover:border-orange-400',  hoverShadow: 'hover:shadow-orange-200/40',  iconBg: 'bg-orange-50 dark:bg-orange-900/30',   hoverTitle: 'group-hover:text-orange-600 dark:group-hover:text-orange-400', arrow: 'text-orange-400', emojiAnim: 'group-hover:scale-110' },
+    { to: '/scratch', emoji: '🍀', title: 'Ticket Surprise',  subtitle: 'Tente ta chance !',                border: 'border-yellow-100 dark:border-gray-700',  hoverBorder: 'hover:border-yellow-400',  hoverShadow: 'hover:shadow-yellow-200/40',  iconBg: 'bg-yellow-50 dark:bg-yellow-900/30',   hoverTitle: 'group-hover:text-yellow-600 dark:group-hover:text-yellow-400', arrow: 'text-yellow-400', emojiAnim: 'group-hover:scale-110' },
   ];
 
   const handleLogout = async () => {
@@ -71,21 +71,24 @@ const Home = () => {
         {/* --- 2. ZONE SCROLLABLE DES BOUTONS --- */}
         <div className="w-full grow flex flex-col justify-center overflow-hidden px-4 py-2 z-10 max-w-md">
             <div className="w-full max-h-full overflow-y-auto px-2 py-4
-                scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent scroll-smooth
+                scrollbar-large scrollbar-thumb-pink-200 scrollbar-track-transparent scroll-smooth
                 mask-[linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]
                 webkit-[mask-image:linear-gradient(to_bottom,transparent,black_5%,black_95%,transparent)]"
             >
               <div className="grid grid-cols-1 gap-4 w-full font-serif">
                 {mainCards.map((card) => (
-                  <Link key={card.to} to={card.to} className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-pink-100 dark:border-gray-700 transition-all duration-300 hover:border-pink-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 overflow-hidden">
+                  <Link key={card.to} to={card.to} className={`group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 ${card.border} transition-all duration-300 ${card.hoverBorder} hover:shadow-xl ${card.hoverShadow} hover:-translate-y-1 active:scale-95 overflow-hidden`}>
                     <div className="flex items-center gap-4 relative z-10">
-                      <div className="bg-pink-50 dark:bg-pink-900/30 p-3 rounded-xl text-2xl transition-transform duration-300 group-hover:scale-105">{card.emoji}</div>
+                      <div className={`${card.iconBg} p-3 rounded-xl text-2xl transition-transform duration-300 ${card.emojiAnim}`}>{card.emoji}</div>
                       <div>
-                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 transition-colors">{card.title}</h2>
+                        <h2 className={`text-lg font-bold text-gray-800 dark:text-gray-100 ${card.hoverTitle} transition-colors`}>{card.title}</h2>
                         <p className="text-gray-500 dark:text-gray-400 text-xs">{card.subtitle}</p>
                       </div>
-                      <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-pink-400">→</div>
+                      <div className={`absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${card.arrow}`}>→</div>
                     </div>
+                    {card.shimmer && (
+                      <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-0"></div>
+                    )}
                   </Link>
                 ))}
 
@@ -98,14 +101,14 @@ const Home = () => {
                 </button>
 
                 {showMore && extraCards.map((card) => (
-                  <Link key={card.to} to={card.to} className="group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-100 dark:border-gray-700 transition-all duration-300 hover:border-pink-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 overflow-hidden">
+                  <Link key={card.to} to={card.to} className={`group relative block p-4 bg-white dark:bg-gray-800 rounded-2xl border-2 ${card.border} transition-all duration-300 ${card.hoverBorder} hover:shadow-xl ${card.hoverShadow} hover:-translate-y-1 active:scale-95 overflow-hidden`}>
                     <div className="flex items-center gap-4 relative z-10">
-                      <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl text-2xl transition-transform duration-300 group-hover:scale-105">{card.emoji}</div>
+                      <div className={`${card.iconBg} p-3 rounded-xl text-2xl transition-transform duration-300 ${card.emojiAnim}`}>{card.emoji}</div>
                       <div>
-                        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 transition-colors">{card.title}</h2>
+                        <h2 className={`text-lg font-bold text-gray-800 dark:text-gray-100 ${card.hoverTitle} transition-colors`}>{card.title}</h2>
                         <p className="text-gray-500 dark:text-gray-400 text-xs">{card.subtitle}</p>
                       </div>
-                      <div className="absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-pink-400">→</div>
+                      <div className={`absolute right-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${card.arrow}`}>→</div>
                     </div>
                   </Link>
                 ))}
