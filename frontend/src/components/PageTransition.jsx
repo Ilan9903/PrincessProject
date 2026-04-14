@@ -12,7 +12,7 @@ const PageTransition = ({ children }) => {
         duration: 0.15,                    // Plus rapide pour éviter les flashs
         ease: "easeInOut"
       }}
-      className="w-full min-h-screen"      // Pas de fond, chaque page gère le sien
+      className="w-full min-h-screen bg-pink-50 dark:bg-gray-900 transition-colors"
     >
       {children}
     </motion.div>

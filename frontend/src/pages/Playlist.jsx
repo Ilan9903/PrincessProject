@@ -100,9 +100,9 @@ const Playlist = () => {
   if (loading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center transition-colors">
           <div className="text-6xl animate-bounce">🎵</div>
-          <p className="mt-4 text-gray-600 font-['Playfair_Display']">Chargement de la playlist...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400 font-['Playfair_Display']">Chargement de la playlist...</p>
         </div>
       </PageTransition>
     );
@@ -110,7 +110,7 @@ const Playlist = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
+      <div className="fixed inset-0 bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
         <FloatingHearts />
         
         <HomeButton />

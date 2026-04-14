@@ -70,10 +70,10 @@ const Coupons = () => {
   if (loading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-pink-50 flex items-center justify-center font-['Playfair_Display']">
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex items-center justify-center font-['Playfair_Display'] transition-colors">
           <div className="text-center">
             <div className="text-4xl mb-4 animate-bounce">🎁</div>
-            <p className="text-gray-500 italic">Chargement de tes cadeaux...</p>
+            <p className="text-gray-500 dark:text-gray-400 italic">Chargement de tes cadeaux...</p>
           </div>
         </div>
       </PageTransition>
@@ -82,7 +82,8 @@ const Coupons = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center p-6 font-['Playfair_Display'] relative transition-colors">
+      <div className="fixed inset-0 bg-pink-50 dark:bg-gray-900 overflow-y-auto font-['Playfair_Display'] transition-colors">
+      <div className="min-h-screen flex flex-col items-center p-6 relative">
         <FloatingHearts />
         
         <HomeButton />
@@ -168,6 +169,7 @@ const Coupons = () => {
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
       `}} />
+      </div>
     </PageTransition>
   );
 };

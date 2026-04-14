@@ -103,8 +103,7 @@ const Quiz = () => {
   if (loading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center">
-          <div className="text-6xl animate-bounce">❓</div>
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center">
           <p className="mt-4 text-gray-600 font-['Playfair_Display']">Chargement des questions...</p>
         </div>
       </PageTransition>
@@ -114,8 +113,7 @@ const Quiz = () => {
   if (questions.length === 0) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-pink-50 flex flex-col items-center justify-center">
-          <div className="text-6xl mb-4">😢</div>
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center">
           <p className="text-gray-600 font-['Playfair_Display']">Aucune question disponible</p>
           <Link to="/" className="mt-6 px-6 py-3 bg-pink-500 text-white rounded-full">Retour</Link>
         </div>
