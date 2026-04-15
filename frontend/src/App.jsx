@@ -61,8 +61,9 @@ function App() {
   // --- PWA : Enregistrement du service worker pour le mode hors-ligne ---
   useRegisterSW();
 
-  // État de connexion : vérifie le JWT au chargement
+  // État de connexion + infos utilisateur
   const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const hasCheckedAuth = useRef(false);
 
@@ -72,17 +73,19 @@ function App() {
     hasCheckedAuth.current = true;
 
     const checkTokenValidity = async () => {
-      const isValid = await isAuthenticated();
-      setIsAuth(isValid);
+      const result = await isAuthenticated();
+      setIsAuth(result.authenticated);
+      setUser(result.user);
       setIsLoading(false);
     };
     
     checkTokenValidity();
-  }, []); // Seulement au montage initial
+  }, []);
 
   // Fonction appelée quand le Login est validé
-  const handleLogin = () => {
-    setIsAuth(true); // Déclenche l'affichage du site
+  const handleLogin = (userData) => {
+    setIsAuth(true);
+    setUser(userData || null);
   };
 
   return (

@@ -622,7 +622,7 @@ router.post('/answers', authenticateToken, validate(answerSchema), async (req, r
       selectedAnswer,
       correctAnswer: questionData.correctAnswer,
       isCorrect,
-      answeredBy: req.user.timestamp,
+      answeredBy: req.user.userId,
       answeredAt: admin.firestore.FieldValue.serverTimestamp()
     };
     
@@ -702,7 +702,7 @@ router.get('/statistics', authenticateToken, async (req, res, next) => {
     answersSnapshot.forEach(doc => {
       const data = doc.data();
       
-      if (data.answeredBy === req.user.timestamp) {
+      if (data.answeredBy === req.user.userId) {
         totalAnswers++;
         if (data.isCorrect) {
           correctAnswers++;
@@ -801,7 +801,7 @@ router.get('/history', authenticateToken, async (req, res, next) => {
     snapshot.forEach(doc => {
       const answerData = doc.data();
       
-      if (answerData.answeredBy !== req.user.timestamp) return;
+      if (answerData.answeredBy !== req.user.userId) return;
       
       allAnswers.push({
         id: doc.id,
