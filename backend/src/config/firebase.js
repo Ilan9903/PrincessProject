@@ -11,8 +11,17 @@ let db = null;
 try {
   let credential;
   
+  const serviceAccountPath = join(__dirname, '..', '..', 'serviceAccountKey.json');
+  
+  // DEVELOPMENT : Préférer le fichier serviceAccountKey.json s'il existe
+  if (existsSync(serviceAccountPath)) {
+    console.log('🔧 Mode DEVELOPMENT : Utilisation du fichier serviceAccountKey.json');
+    
+    const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf8'));
+    credential = admin.credential.cert(serviceAccount);
+  }
   // PRODUCTION : Utiliser les variables d'environnement
-  if (process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PROJECT_ID) {
+  else if (process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PROJECT_ID) {
     console.log('🔧 Mode PRODUCTION : Utilisation des variables d\'environnement Firebase');
     
     credential = admin.credential.cert({
@@ -22,18 +31,8 @@ try {
       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
     });
   } 
-  // DEVELOPMENT : Utiliser le fichier serviceAccountKey.json
   else {
-    console.log('🔧 Mode DEVELOPMENT : Utilisation du fichier serviceAccountKey.json');
-    
-    const serviceAccountPath = join(__dirname, '..', '..', 'serviceAccountKey.json');
-    
-    if (!existsSync(serviceAccountPath)) {
-      throw new Error('serviceAccountKey.json introuvable. Créez-le ou définissez les variables d\'environnement.');
-    }
-    
-    const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf8'));
-    credential = admin.credential.cert(serviceAccount);
+    throw new Error('serviceAccountKey.json introuvable et variables d\'environnement non définies.');
   }
 
   // Initialiser Firebase Admin

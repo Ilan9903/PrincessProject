@@ -19,8 +19,7 @@ app.set('trust proxy', 1);
 // 🔍 DEBUG : Vérifier les variables d'environnement au démarrage
 console.log('✅ .env chargé');
 console.log('🌍 NODE_ENV:', process.env.NODE_ENV || 'development (par défaut)');
-console.log('🔐 APP_PASSWORD:', process.env.APP_PASSWORD ? '✓ Défini' : '✗ Manquant');
-console.log('🔑 JWT_SECRET:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Manquant');
+console.log(' JWT_SECRET:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Manquant');
 console.log('🔥 FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? '✓ Défini' : '✗ Manquant');
 console.log('🌐 FRONTEND_URL:', process.env.FRONTEND_URL || 'http://localhost:1308');
 
@@ -72,6 +71,22 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 app.use('/api', limiter);
+
+// Rate limiting spécifique au login : 5 tentatives par 5 minutes
+const loginLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 5, // 5 tentatives max
+  skip: (req) => {
+    if (process.env.NODE_ENV === 'test') return true;
+    const localhostIps = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
+    return localhostIps.includes(req.ip);
+  },
+  message: { error: 'Trop de tentatives de connexion. Réessayez dans 5 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/auth/login', loginLimiter);
+app.use('/api/auth/register', loginLimiter);
 
 // Body parser
 app.use(express.json({ limit: '10mb' }));
