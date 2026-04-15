@@ -697,5 +697,5 @@ ISC License - Voir [LICENSE](LICENSE) pour plus de détails.
 ---
 
 **Version** : 2.0.0  
-**Dernière mise à jour** : 23 Février 2026  
+**Dernière mise à jour** : 15 Avril 2026  
 **Auteur** : The Prince 👨‍💻
