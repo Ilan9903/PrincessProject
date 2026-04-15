@@ -51,8 +51,8 @@ const ValentineRequest = () => {
           imageUrl: IMG_ASK
         })
       });
-    } catch {
-      // Silently ignore API errors and proceed to success page
+    } catch (error) {
+      console.warn('Valentine POST échoué — enregistrement non sauvegardé:', error.message);
     }
     navigate('/success', { state: { fromValentine: true } });
   };

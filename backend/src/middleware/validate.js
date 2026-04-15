@@ -86,7 +86,7 @@ export const playlistSchema = Joi.object({
   title: Joi.string().min(1).max(100).required(),
   artist: Joi.string().max(100).optional().allow(''),
   url: Joi.string().uri().optional().allow(''),
-  platform: Joi.string().valid('spotify', 'youtube', 'apple', 'other').default('other'),
+  platform: Joi.string().valid('spotify', 'youtube', 'apple_music', 'other').default('other'),
   reason: Joi.string().max(500).optional().allow(''),
   dateAdded: Joi.date().iso().optional()
 });

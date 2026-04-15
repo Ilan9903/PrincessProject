@@ -290,9 +290,12 @@ router.get('/questions/random', authenticateToken, async (req, res, next) => {
       });
     });
     
-    // Mélanger aléatoirement
-    const shuffled = allQuestions.sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, parseInt(count));
+    // Mélanger aléatoirement (Fisher-Yates)
+    for (let i = allQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+    }
+    const selected = allQuestions.slice(0, parseInt(count));
 
     logger.info('Questions aléatoires générées', { 
       count: selected.length,
@@ -793,50 +796,49 @@ router.get('/history', authenticateToken, async (req, res, next) => {
     const { limit = 20 } = req.query;
     
     const snapshot = await db.collection('quiz_answers')
+      .where('answeredBy', '==', req.user.userId)
       .orderBy('answeredAt', 'desc')
+      .limit(parseInt(limit))
       .get();
     
-    const allAnswers = [];
+    if (snapshot.empty) {
+      return res.json([]);
+    }
+
+    const answers = [];
+    const questionIds = new Set();
     
     snapshot.forEach(doc => {
-      const answerData = doc.data();
-      
-      if (answerData.answeredBy !== req.user.userId) return;
-      
-      allAnswers.push({
-        id: doc.id,
-        ...answerData
-      });
+      const data = doc.data();
+      answers.push({ id: doc.id, ...data });
+      questionIds.add(data.questionId);
     });
+
+    // Batch read : une seule requête pour toutes les questions
+    const questionRefs = [...questionIds].map(id => db.collection('quiz_questions').doc(id));
+    const questionDocs = await db.getAll(...questionRefs);
     
-    const limitedAnswers = allAnswers.slice(0, parseInt(limit));
-    
-    const history = [];
-    
-    for (const answer of limitedAnswers) {
-      try {
-        const questionDoc = await db.collection('quiz_questions')
-          .doc(answer.questionId)
-          .get();
-        
-        if (questionDoc.exists) {
-          const questionData = questionDoc.data();
-          history.push({
-            id: answer.id,
-            question: questionData.question,
-            selectedAnswer: answer.selectedAnswer,
-            correctAnswer: questionData.correctAnswer,
-            isCorrect: answer.isCorrect,
-            category: questionData.category,
-            answeredAt: answer.answeredAt?.toDate().toISOString()
-          });
-        }
-      } catch (err) {
-        logger.warn('Question non trouvée', { 
-          questionId: answer.questionId 
-        });
+    const questionsMap = {};
+    questionDocs.forEach(doc => {
+      if (doc.exists) {
+        questionsMap[doc.id] = doc.data();
       }
-    }
+    });
+
+    const history = answers
+      .filter(answer => questionsMap[answer.questionId])
+      .map(answer => {
+        const q = questionsMap[answer.questionId];
+        return {
+          id: answer.id,
+          question: q.question,
+          selectedAnswer: answer.selectedAnswer,
+          correctAnswer: q.correctAnswer,
+          isCorrect: answer.isCorrect,
+          category: q.category,
+          answeredAt: answer.answeredAt?.toDate().toISOString()
+        };
+      });
 
     logger.info('Historique quiz récupéré', { 
       count: history.length,

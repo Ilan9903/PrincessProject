@@ -192,9 +192,12 @@ router.get('/', authenticateToken, async (req, res, next) => {
     const db = getDb();
     const { status, type, upcoming } = req.query;
     
-    const snapshot = await db.collection('planning')
-      .orderBy('date', 'asc')
-      .get();
+    let query = db.collection('planning').orderBy('date', 'asc');
+    
+    if (status) query = query.where('status', '==', status);
+    if (type) query = query.where('type', '==', type);
+    
+    const snapshot = await query.get();
     
     const events = [];
     const now = new Date().toISOString().split('T')[0];
@@ -202,9 +205,7 @@ router.get('/', authenticateToken, async (req, res, next) => {
     snapshot.forEach(doc => {
       const data = doc.data();
       
-      // Filtrer côté serveur
-      if (status && data.status !== status) return;
-      if (type && data.type !== type) return;
+      // upcoming reste filtré en JS (comparaison de date string)
       if (upcoming === 'true' && data.date < now) return;
       
       events.push({ 

@@ -54,7 +54,7 @@ const playlistSchema = Joi.object({
  *                 example: "Divide"
  *               platform:
  *                 type: string
- *                 enum: [spotify, youtube, apple, other]
+ *                 enum: [spotify, youtube, apple_music, other]
  *                 default: spotify
  *               url:
  *                 type: string
@@ -132,7 +132,7 @@ router.post('/', authenticateToken, validate(playlistSchema), async (req, res, n
  *         name: platform
  *         schema:
  *           type: string
- *           enum: [spotify, youtube, apple, other]
+ *           enum: [spotify, youtube, apple_music, other]
  *         description: Filtrer par plateforme
  *       - in: query
  *         name: addedBy
@@ -339,7 +339,7 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
  *                 type: string
  *               platform:
  *                 type: string
- *                 enum: [spotify, youtube, apple, other]
+ *                 enum: [spotify, youtube, apple_music_music, other]
  *               url:
  *                 type: string
  *               addedBy:
