@@ -4,6 +4,7 @@ import { validate, planningSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
+import { paginate } from '../utils/paginate.js';
 
 const router = express.Router();
 
@@ -135,37 +136,63 @@ router.post('/', authenticateToken, validate(planningSchema), async (req, res, n
  *         schema:
  *           type: boolean
  *         description: Afficher uniquement les événements à venir
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Nombre d'éléments par page (max 100)
  *     responses:
  *       200:
- *         description: Liste des événements
+ *         description: Liste paginée des événements
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   title:
- *                     type: string
- *                   description:
- *                     type: string
- *                   date:
- *                     type: string
- *                   time:
- *                     type: string
- *                   location:
- *                     type: string
- *                   type:
- *                     type: string
- *                     enum: [date, activity, reminder, special, other]
- *                   status:
- *                     type: string
- *                     enum: [planned, confirmed, completed, cancelled]
- *                   createdAt:
- *                     type: string
- *                     format: date-time
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       title:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       date:
+ *                         type: string
+ *                       time:
+ *                         type: string
+ *                       location:
+ *                         type: string
+ *                       type:
+ *                         type: string
+ *                         enum: [date, activity, reminder, special, other]
+ *                       status:
+ *                         type: string
+ *                         enum: [planned, confirmed, completed, cancelled]
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
  *       401:
  *         description: Non authentifié
  */
@@ -197,13 +224,16 @@ router.get('/', authenticateToken, async (req, res, next) => {
       });
     });
 
+    const result = paginate(events, req.query);
+
     logger.info('Événements récupérés', { 
-      count: events.length,
+      count: result.pagination.total,
+      page: result.pagination.page,
       filters: { status, type, upcoming },
       ip: req.ip 
     });
 
-    res.json(events);
+    res.json(result);
   } catch (error) {
     logger.error('Erreur récupération événements', { 
       error: error.message,

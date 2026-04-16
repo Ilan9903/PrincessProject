@@ -4,6 +4,7 @@ import { validate, playlistSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
+import { paginate } from '../utils/paginate.js';
 
 const router = express.Router();
 
@@ -134,40 +135,66 @@ router.post('/', authenticateToken, validate(playlistSchema), async (req, res, n
  *           enum: [recent, popular, alphabetical]
  *           default: recent
  *         description: Ordre de tri
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Nombre d'éléments par page (max 100)
  *     responses:
  *       200:
- *         description: Liste des chansons
+ *         description: Liste paginée des chansons
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   title:
- *                     type: string
- *                   artist:
- *                     type: string
- *                   album:
- *                     type: string
- *                   platform:
- *                     type: string
- *                   url:
- *                     type: string
- *                   addedBy:
- *                     type: string
- *                   reason:
- *                     type: string
- *                   isFavorite:
- *                     type: boolean
- *                   playCount:
- *                     type: integer
- *                   createdAt:
- *                     type: string
- *                   lastPlayedAt:
- *                     type: string
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       title:
+ *                         type: string
+ *                       artist:
+ *                         type: string
+ *                       album:
+ *                         type: string
+ *                       platform:
+ *                         type: string
+ *                       url:
+ *                         type: string
+ *                       addedBy:
+ *                         type: string
+ *                       reason:
+ *                         type: string
+ *                       isFavorite:
+ *                         type: boolean
+ *                       playCount:
+ *                         type: integer
+ *                       createdAt:
+ *                         type: string
+ *                       lastPlayedAt:
+ *                         type: string
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
  *       401:
  *         description: Non authentifié
  */
@@ -207,13 +234,16 @@ router.get('/', authenticateToken, async (req, res, next) => {
       songs.sort((a, b) => a.title.localeCompare(b.title));
     }
 
+    const result = paginate(songs, req.query);
+
     logger.info('Chansons récupérées', { 
-      count: songs.length,
+      count: result.pagination.total,
+      page: result.pagination.page,
       filters: { platform, addedBy, favorites, sortBy },
       ip: req.ip 
     });
 
-    res.json(songs);
+    res.json(result);
   } catch (error) {
     logger.error('Erreur récupération playlist', { 
       error: error.message,

@@ -98,8 +98,9 @@ const DateIdeas = () => {
   const fetchUpcomingEvents = async () => {
     try {
       const response = await authenticatedFetch('/api/planning?upcoming=true');
-      const data = await response.json();
-      setUpcomingEvents(Array.isArray(data) ? data.filter(e => e.status !== 'completed' && e.status !== 'cancelled') : []);
+      const json = await response.json();
+      const data = Array.isArray(json) ? json : json.data || [];
+      setUpcomingEvents(data.filter(e => e.status !== 'completed' && e.status !== 'cancelled'));
     } catch (error) {
       console.error('Erreur chargement événements:', error);
     } finally {

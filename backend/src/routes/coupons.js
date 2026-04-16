@@ -4,6 +4,7 @@ import { validate, couponSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
+import { paginate } from '../utils/paginate.js';
 
 const router = express.Router();
 
@@ -140,15 +141,41 @@ router.post('/', authenticateToken, validate(couponSchema), async (req, res, nex
  *           type: string
  *           enum: [massage, restaurant, cinema, experience, other]
  *         description: Filtrer par type
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Nombre d'éléments par page (max 100)
  *     responses:
  *       200:
- *         description: Liste des coupons
+ *         description: Liste paginée des coupons
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Coupon'
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Coupon'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
  *       401:
  *         description: Non authentifié
  */
@@ -157,7 +184,10 @@ router.get('/', authenticateToken, async (req, res, next) => {
     const db = getDb();
     const { status, type } = req.query;
     
-    const snapshot = await db.collection('coupons').orderBy('createdAt', 'desc').get();
+    let query = db.collection('coupons').orderBy('createdAt', 'desc');
+    if (type) query = query.where('type', '==', type);
+    
+    const snapshot = await query.get();
 
     const coupons = [];
     const now = new Date();
@@ -173,9 +203,6 @@ router.get('/', authenticateToken, async (req, res, next) => {
       if (status === 'available' && (data.isRedeemed || isExpired)) return;
       if (status === 'expired' && !isExpired) return;
       
-      // Filtrer par type si demandé
-      if (type && data.type !== type) return;
-      
       coupons.push({ 
         id: doc.id, 
         ...data,
@@ -184,13 +211,16 @@ router.get('/', authenticateToken, async (req, res, next) => {
       });
     });
 
+    const result = paginate(coupons, req.query);
+
     logger.info('Coupons récupérés', { 
-      count: coupons.length,
+      count: result.pagination.total,
+      page: result.pagination.page,
       filters: { status, type },
       ip: req.ip 
     });
 
-    res.json(coupons);
+    res.json(result);
   } catch (error) {
     logger.error('Erreur récupération coupons', { 
       error: error.message,

@@ -4,6 +4,7 @@ import { validate, quizSchema, answerSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
+import { paginate } from '../utils/paginate.js';
 
 const router = express.Router();
 
@@ -113,60 +114,71 @@ router.post('/questions', authenticateToken, validate(quizSchema), async (req, r
  *           enum: [easy, medium, hard]
  *         description: Filtrer par difficulté
  *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
- *         description: Nombre maximum de questions
+ *           default: 20
+ *         description: Nombre d'éléments par page (max 100)
  *     responses:
  *       200:
- *         description: Liste des questions (sans réponses correctes)
+ *         description: Liste paginée des questions (sans réponses correctes)
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   question:
- *                     type: string
- *                   options:
- *                     type: array
- *                     items:
- *                       type: string
- *                   category:
- *                     type: string
- *                   difficulty:
- *                     type: string
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       question:
+ *                         type: string
+ *                       options:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                       category:
+ *                         type: string
+ *                       difficulty:
+ *                         type: string
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
  *       401:
  *         description: Non authentifié
  */
 router.get('/questions', authenticateToken, async (req, res, next) => {
   try {
     const db = getDb();
-    const { category, difficulty, limit } = req.query;
+    const { category, difficulty } = req.query;
     
-    let snapshot;
-    if (limit) {
-      snapshot = await db.collection('quiz_questions')
-        .orderBy('createdAt', 'desc')
-        .limit(parseInt(limit))
-        .get();
-    } else {
-      snapshot = await db.collection('quiz_questions')
-        .orderBy('createdAt', 'desc')
-        .get();
-    }
+    // Filtres Firestore AVANT récupération (corrige le bug filter-after-limit)
+    let query = db.collection('quiz_questions').orderBy('createdAt', 'desc');
+    if (category) query = query.where('category', '==', category);
+    if (difficulty) query = query.where('difficulty', '==', difficulty);
+    
+    const snapshot = await query.get();
 
     const questions = [];
     snapshot.forEach(doc => {
       const data = doc.data();
-      
-      // Filtrer côté serveur
-      if (category && data.category !== category) return;
-      if (difficulty && data.difficulty !== difficulty) return;
-      
       questions.push({ 
         id: doc.id, 
         question: data.question,
@@ -177,13 +189,16 @@ router.get('/questions', authenticateToken, async (req, res, next) => {
       });
     });
 
+    const result = paginate(questions, req.query);
+
     logger.info('Questions récupérées', { 
-      count: questions.length,
-      filters: { category, difficulty, limit },
+      count: result.pagination.total,
+      page: result.pagination.page,
+      filters: { category, difficulty },
       ip: req.ip 
     });
 
-    res.json(questions);
+    res.json(result);
   } catch (error) {
     logger.error('Erreur récupération questions', { 
       error: error.message,
@@ -665,22 +680,17 @@ router.get('/statistics', authenticateToken, async (req, res, next) => {
   try {
     const db = getDb();
     
-    const answersSnapshot = await db.collection('quiz_answers').get();
+    // Requête ciblée : uniquement les réponses de l'utilisateur
+    const answersSnapshot = await db.collection('quiz_answers')
+      .where('answeredBy', '==', req.user.userId)
+      .get();
     
-    let totalAnswers = 0;
     let correctAnswers = 0;
-    
     answersSnapshot.forEach(doc => {
-      const data = doc.data();
-      
-      if (data.answeredBy === req.user.userId) {
-        totalAnswers++;
-        if (data.isCorrect) {
-          correctAnswers++;
-        }
-      }
+      if (doc.data().isCorrect) correctAnswers++;
     });
     
+    const totalAnswers = answersSnapshot.size;
     const accuracy = totalAnswers > 0 ? ((correctAnswers / totalAnswers) * 100).toFixed(2) : 0;
     
     const categoriesSnapshot = await db.collection('quiz_questions').get();
@@ -725,14 +735,20 @@ router.get('/statistics', authenticateToken, async (req, res, next) => {
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 20
- *         description: Nombre maximum de réponses à retourner
+ *         description: Nombre d'éléments par page (max 100)
  *     responses:
  *       200:
- *         description: Historique des réponses de l'utilisateur
+ *         description: Historique paginé des réponses de l'utilisateur
  *         content:
  *           application/json:
  *             schema:
@@ -761,16 +777,14 @@ router.get('/statistics', authenticateToken, async (req, res, next) => {
 router.get('/history', authenticateToken, async (req, res, next) => {
   try {
     const db = getDb();
-    const { limit = 20 } = req.query;
     
     const snapshot = await db.collection('quiz_answers')
       .where('answeredBy', '==', req.user.userId)
       .orderBy('answeredAt', 'desc')
-      .limit(parseInt(limit))
       .get();
     
     if (snapshot.empty) {
-      return res.json([]);
+      return res.json({ data: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } });
     }
 
     const answers = [];
@@ -808,13 +822,15 @@ router.get('/history', authenticateToken, async (req, res, next) => {
         };
       });
 
+    const result = paginate(history, req.query);
+
     logger.info('Historique quiz récupéré', { 
-      count: history.length,
-      limit,
+      count: result.pagination.total,
+      page: result.pagination.page,
       ip: req.ip 
     });
 
-    res.json(history);
+    res.json(result);
   } catch (error) {
     logger.error('Erreur récupération historique', { 
       error: error.message,

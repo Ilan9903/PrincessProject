@@ -17,7 +17,7 @@ const Playlist = () => {
     try {
       const response = await authenticatedFetch(`/api/playlist?sortBy=${sortBy}`);
       const data = await response.json();
-      setSongs(Array.isArray(data) ? data : []);
+      setSongs(Array.isArray(data) ? data : data.data || []);
     } catch (error) {
       console.error('Erreur chargement playlist:', error);
     } finally {

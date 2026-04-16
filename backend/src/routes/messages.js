@@ -4,6 +4,7 @@ import { validate, messageSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
+import { paginate } from '../utils/paginate.js';
 
 const router = express.Router();
 
@@ -117,38 +118,65 @@ router.post('/', authenticateToken, validate(messageSchema), async (req, res, ne
  *     tags: [Messages]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Nombre d'éléments par page (max 100)
  *     responses:
  *       200:
- *         description: Liste des messages
+ *         description: Liste paginée des messages
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                     example: "abc123xyz"
- *                   title:
- *                     type: string
- *                     example: "Mon message"
- *                   content:
- *                     type: string
- *                     example: "Contenu du message"
- *                   isSecret:
- *                     type: boolean
- *                     example: false
- *                   isLocked:
- *                     type: boolean
- *                     description: Si true, le contenu est masqué
- *                     example: false
- *                   unlockDate:
- *                     type: string
- *                     example: "2026-12-25"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: "abc123xyz"
+ *                       title:
+ *                         type: string
+ *                         example: "Mon message"
+ *                       content:
+ *                         type: string
+ *                         example: "Contenu du message"
+ *                       isSecret:
+ *                         type: boolean
+ *                         example: false
+ *                       isLocked:
+ *                         type: boolean
+ *                         description: Si true, le contenu est masqué
+ *                         example: false
+ *                       unlockDate:
+ *                         type: string
+ *                         example: "2026-12-25"
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     total:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
  *       401:
  *         description: Non authentifié
  */
@@ -189,12 +217,15 @@ router.get('/', authenticateToken, async (req, res, next) => {
       });
     });
 
+    const result = paginate(messages, req.query);
+
     logger.info('Messages récupérés', { 
-      count: messages.length,
+      count: result.pagination.total,
+      page: result.pagination.page,
       ip: req.ip 
     });
 
-    res.json(messages);
+    res.json(result);
   } catch (error) {
     logger.error('Erreur récupération messages', { 
       error: error.message,

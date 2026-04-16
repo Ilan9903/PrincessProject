@@ -22,9 +22,10 @@ const Quiz = () => {
     const fetchQuestions = async () => {
       try {
         const response = await authenticatedFetch('/api/quiz/questions');
-        const data = await response.json();
+        const json = await response.json();
+        const data = Array.isArray(json) ? json : json.data || [];
         
-        if (Array.isArray(data) && data.length > 0) {
+        if (data.length > 0) {
           setQuestions(data);
           setTotalQuestions(data.length);
         }
