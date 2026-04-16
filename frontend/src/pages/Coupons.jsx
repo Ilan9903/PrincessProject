@@ -19,8 +19,7 @@ const Coupons = () => {
       const response = await authenticatedFetch('/api/coupons');
       const data = await response.json();
       setCoupons(Array.isArray(data) ? data : data.data || []);
-    } catch (error) {
-      console.error('Erreur chargement coupons:', error);
+    } catch {
       setError('Impossible de charger les coupons');
     } finally {
       setLoading(false);
@@ -47,8 +46,8 @@ const Coupons = () => {
         ));
         setFlippedId(null); // Refermer la carte
       }
-    } catch (error) {
-      console.error('Erreur utilisation coupon:', error);
+    } catch {
+      // Silencieux — l'UI gère déjà l'état
     }
   };
 

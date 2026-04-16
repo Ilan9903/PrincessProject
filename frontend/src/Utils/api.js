@@ -44,8 +44,7 @@ export const login = async (credentials) => {
     } else {
       return { success: false, error: data.error || 'Erreur de connexion' };
     }
-  } catch (error) {
-    console.error('Erreur login:', error);
+  } catch {
     return { success: false, error: 'Erreur de connexion au serveur' };
   }
 };
@@ -72,8 +71,7 @@ export const register = async (userData) => {
     } else {
       return { success: false, error: data.error || 'Erreur d\'inscription' };
     }
-  } catch (error) {
-    console.error('Erreur register:', error);
+  } catch {
     return { success: false, error: 'Erreur de connexion au serveur' };
   }
 };
@@ -85,8 +83,44 @@ export const logout = async () => {
       method: 'POST',
       credentials: 'include',
     });
-  } catch (error) {
-    console.error('Erreur lors du logout:', error);
+  } catch {
+    // Silencieux - l'erreur logout n'empêche pas la navigation
+  }
+};
+
+/**
+ * Demander un email de réinitialisation de mot de passe
+ * @param {string} email
+ */
+export const forgotPassword = async (email) => {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    return await response.json();
+  } catch {
+    return { success: false, error: 'Erreur de connexion au serveur' };
+  }
+};
+
+/**
+ * Réinitialiser le mot de passe avec le token
+ * @param {string} token
+ * @param {string} userId
+ * @param {string} newPassword
+ */
+export const resetPassword = async (token, userId, newPassword) => {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, userId, newPassword }),
+    });
+    return await response.json();
+  } catch {
+    return { success: false, error: 'Erreur de connexion au serveur' };
   }
 };
 

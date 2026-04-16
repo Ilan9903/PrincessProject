@@ -30,8 +30,7 @@ const Quiz = () => {
         setQuestions(data);
         setTotalQuestions(data.length);
       }
-    } catch (error) {
-      console.error('Erreur chargement questions:', error);
+    } catch {
       setError('Impossible de charger les questions');
     } finally {
       setLoading(false);
@@ -98,8 +97,7 @@ const Quiz = () => {
         setShowError(true);
         setTimeout(() => setShowError(false), 2000);
       }
-    } catch (error) {
-      console.error('Erreur soumission réponse:', error);
+    } catch {
       setShowError(true);
       setTimeout(() => setShowError(false), 2000);
     }

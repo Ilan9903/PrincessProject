@@ -104,8 +104,7 @@ const DateIdeas = () => {
       const json = await response.json();
       const data = Array.isArray(json) ? json : json.data || [];
       setUpcomingEvents(data.filter(e => e.status !== 'completed' && e.status !== 'cancelled'));
-    } catch (error) {
-      console.error('Erreur chargement événements:', error);
+    } catch {
       setError('Impossible de charger les événements');
     } finally {
       setLoading(false);
@@ -137,8 +136,7 @@ const DateIdeas = () => {
         await fetchUpcomingEvents(); // Recharger la liste
         alert('✅ Date planifiée avec succès !');
       }
-    } catch (error) {
-      console.error('Erreur planification:', error);
+    } catch {
       alert('❌ Erreur lors de la planification');
     }
   };
@@ -161,8 +159,8 @@ const DateIdeas = () => {
       if (response.ok) {
         await fetchUpcomingEvents();
       }
-    } catch (error) {
-      console.error('Erreur completion:', error);
+    } catch {
+      // Silencieux
     }
   };
 

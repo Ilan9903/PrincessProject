@@ -21,8 +21,7 @@ const Playlist = () => {
       const response = await authenticatedFetch(`/api/playlist?sortBy=${sortBy}`);
       const data = await response.json();
       setSongs(Array.isArray(data) ? data : data.data || []);
-    } catch (error) {
-      console.error('Erreur chargement playlist:', error);
+    } catch {
       setError('Impossible de charger la playlist');
     } finally {
       setLoading(false);
@@ -64,8 +63,8 @@ const Playlist = () => {
       setSongs(songs.map(s => 
         s.id === songId ? { ...s, isFavorite: !currentFavorite } : s
       ));
-    } catch (error) {
-      console.error('Erreur toggle favorite:', error);
+    } catch {
+      // Silencieux
     }
   };
 
@@ -78,8 +77,8 @@ const Playlist = () => {
       setSongs(songs.map(s => 
         s.id === songId ? { ...s, playCount: (s.playCount || 0) + 1 } : s
       ));
-    } catch (error) {
-      console.error('Erreur play count:', error);
+    } catch {
+      // Silencieux
     }
   };
 

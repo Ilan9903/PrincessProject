@@ -213,6 +213,12 @@ const Login = ({ onLogin }) => {
                   </>
                 )}
               </button>
+
+              <div className="text-center">
+                <a href="/forgot-password" className="text-pink-500 dark:text-pink-400 text-sm hover:underline">
+                  Mot de passe oublié ? 🔑
+                </a>
+              </div>
             </motion.form>
           ) : (
             /* ── Formulaire PIN ── */

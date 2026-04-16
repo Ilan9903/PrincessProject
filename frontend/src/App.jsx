@@ -26,6 +26,8 @@ const Wheel = lazy(() => import('./pages/Wheel'));
 const Quiz = lazy(() => import('./pages/Quiz'));
 const ScratchGame = lazy(() => import('./pages/ScratchGame'));
 const Playlist = lazy(() => import('./pages/Playlist'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
 // --- Fallback de chargement ---
 const PageLoader = () => (
@@ -131,14 +133,18 @@ function App() {
         <AnimatePresence mode="wait">
           {!isAuth ? (
             
-            // --- ÉCRAN DE LOGIN ---
+            // --- ÉCRANS PUBLICS (Login, Mot de passe oublié, Reset) ---
             <Suspense fallback={<PageLoader />}>
               <motion.div 
                 key="login"
                 exit={{ opacity: 0, y: -50, transition: { duration: 0.5 } }}
                 className="fixed inset-0 z-50"
               >
-                <Login onLogin={handleLogin} />
+                <Routes>
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="*" element={<Login onLogin={handleLogin} />} />
+                </Routes>
               </motion.div>
             </Suspense>
 

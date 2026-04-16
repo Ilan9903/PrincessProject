@@ -11,8 +11,8 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
-  componentDidCatch(error, info) {
-    console.error('ErrorBoundary caught:', error, info.componentStack);
+  componentDidCatch() {
+    // Silencieux en production — l'UI de fallback gère l'affichage
   }
 
   render() {

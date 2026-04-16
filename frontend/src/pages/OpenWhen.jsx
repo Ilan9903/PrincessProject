@@ -20,8 +20,7 @@ const OpenWhen = () => {
       const response = await authenticatedFetch('/api/messages');
       const data = await response.json();
       setMessages(Array.isArray(data) ? data : data.data || []);
-    } catch (error) {
-      console.error('Erreur chargement messages:', error);
+    } catch {
       setError('Impossible de charger les messages');
     } finally {
       setLoading(false);

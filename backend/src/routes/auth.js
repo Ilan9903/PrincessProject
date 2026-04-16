@@ -1,10 +1,12 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import logger from '../utils/logger.js';
 import { tokenBlacklist } from '../utils/tokenBlacklist.js';
 import { getDb } from '../config/firebase.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { sendPasswordResetEmail } from '../utils/email.js';
 
 const router = express.Router();
 
@@ -405,6 +407,180 @@ router.post('/logout', async (req, res, next) => {
     });
   } catch (error) {
     logger.error('Erreur déconnexion', { error: error.message, ip: req.ip });
+    next(error);
+  }
+});
+
+// ============================================
+// MOT DE PASSE OUBLIÉ
+// ============================================
+
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Demander un email de réinitialisation de mot de passe
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email]
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *     responses:
+ *       200:
+ *         description: Email envoyé (toujours 200, même si l'email n'existe pas — sécurité)
+ */
+router.post('/forgot-password', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'L\'email est requis' });
+    }
+
+    const db = getDb();
+    const usersSnapshot = await db.collection('users')
+      .where('email', '==', email.toLowerCase())
+      .limit(1)
+      .get();
+
+    // Toujours répondre 200 pour ne pas révéler si l'email existe
+    if (usersSnapshot.empty) {
+      logger.warn('Forgot password pour email inconnu', { email: email.toLowerCase(), ip: req.ip });
+      return res.json({
+        success: true,
+        message: 'Si un compte existe avec cet email, un lien de réinitialisation a été envoyé 📧'
+      });
+    }
+
+    const userDoc = usersSnapshot.docs[0];
+    const userData = userDoc.data();
+
+    // Générer un token sécurisé
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Stocker le token hashé dans Firestore (expire dans 1h)
+    await db.collection('passwordResets').doc(userDoc.id).set({
+      tokenHash: resetTokenHash,
+      email: email.toLowerCase(),
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 heure
+      createdAt: new Date().toISOString(),
+      used: false
+    });
+
+    // Construire l'URL de reset
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:1308';
+    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}&id=${userDoc.id}`;
+
+    // Envoyer l'email
+    await sendPasswordResetEmail(userData.email, userData.displayName, resetUrl);
+
+    logger.info('Email de reset envoyé', { userId: userDoc.id, ip: req.ip });
+
+    res.json({
+      success: true,
+      message: 'Si un compte existe avec cet email, un lien de réinitialisation a été envoyé 📧'
+    });
+  } catch (error) {
+    logger.error('Erreur forgot-password', { error: error.message, ip: req.ip });
+    next(error);
+  }
+});
+
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Réinitialiser le mot de passe avec un token valide
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [token, userId, newPassword]
+ *             properties:
+ *               token:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *                 minLength: 6
+ *     responses:
+ *       200:
+ *         description: Mot de passe réinitialisé avec succès
+ *       400:
+ *         description: Token invalide, expiré ou déjà utilisé
+ */
+router.post('/reset-password', async (req, res, next) => {
+  try {
+    const { token, userId, newPassword } = req.body;
+
+    if (!token || !userId || !newPassword) {
+      return res.status(400).json({ error: 'Token, userId et nouveau mot de passe sont requis' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères' });
+    }
+
+    const db = getDb();
+    const resetDoc = await db.collection('passwordResets').doc(userId).get();
+
+    if (!resetDoc.exists) {
+      return res.status(400).json({ error: 'Lien de réinitialisation invalide ou expiré' });
+    }
+
+    const resetData = resetDoc.data();
+
+    // Vérifier si déjà utilisé
+    if (resetData.used) {
+      return res.status(400).json({ error: 'Ce lien a déjà été utilisé. Demande un nouveau lien.' });
+    }
+
+    // Vérifier l'expiration
+    if (new Date(resetData.expiresAt) < new Date()) {
+      return res.status(400).json({ error: 'Ce lien a expiré. Demande un nouveau lien.' });
+    }
+
+    // Vérifier le token (comparer le hash)
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    if (tokenHash !== resetData.tokenHash) {
+      logger.warn('Token de reset invalide', { userId, ip: req.ip });
+      return res.status(400).json({ error: 'Lien de réinitialisation invalide' });
+    }
+
+    // Hasher le nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    // Mettre à jour le mot de passe
+    await db.collection('users').doc(userId).update({
+      password: hashedPassword
+    });
+
+    // Marquer le token comme utilisé
+    await db.collection('passwordResets').doc(userId).update({
+      used: true,
+      usedAt: new Date().toISOString()
+    });
+
+    logger.info('Mot de passe réinitialisé avec succès', { userId, ip: req.ip });
+
+    res.json({
+      success: true,
+      message: 'Mot de passe réinitialisé avec succès ! Tu peux te reconnecter 💖'
+    });
+  } catch (error) {
+    logger.error('Erreur reset-password', { error: error.message, ip: req.ip });
     next(error);
   }
 });
