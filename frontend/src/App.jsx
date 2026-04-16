@@ -10,6 +10,7 @@ import ScrollToTop from './components/ScrollToTop';
 import MusicPlayer from './components/MusicPlayer'; // ✅ Le lecteur audio
 import InstallPrompt from './components/InstallPrompt'; // ✅ Le composant d'invite d'installation
 import ThemeToggle from './components/ThemeToggle'; // 🌙 Toggle dark mode
+import ErrorBoundary from './components/ErrorBoundary';
 
 // --- PAGES ---
 import Login from './pages/Login';
@@ -34,7 +35,8 @@ const AnimatedRoutes = () => {
   return (
     // mode="wait" : attend que la page sorte avant de faire entrer la nouvelle
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+      <ErrorBoundary key={location.pathname}>
+        <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/valentine" element={<ValentineRequest />} />
         <Route path="/success" element={<ValentineSuccess />} />
@@ -51,6 +53,7 @@ const AnimatedRoutes = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
+      </ErrorBoundary>
     </AnimatePresence>
   );
 };

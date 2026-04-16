@@ -9,6 +9,7 @@ const DateIdeas = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Ta liste d'idées (Tu peux en rajouter autant que tu veux !)
   const ideasPool = [
@@ -96,6 +97,8 @@ const DateIdeas = () => {
   }, []);
 
   const fetchUpcomingEvents = async () => {
+    setError(null);
+    setLoading(true);
     try {
       const response = await authenticatedFetch('/api/planning?upcoming=true');
       const json = await response.json();
@@ -103,6 +106,7 @@ const DateIdeas = () => {
       setUpcomingEvents(data.filter(e => e.status !== 'completed' && e.status !== 'cancelled'));
     } catch (error) {
       console.error('Erreur chargement événements:', error);
+      setError('Impossible de charger les événements');
     } finally {
       setLoading(false);
     }
@@ -221,7 +225,14 @@ return (
         </div>
 
         {/* Prochaines dates planifiées */}
-        {!loading && upcomingEvents.length > 0 && (
+        {error && (
+          <div className="z-10 w-full max-w-md mt-8 text-center">
+            <p className="text-4xl mb-4">😿</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <button onClick={fetchUpcomingEvents} className="px-5 py-2.5 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors">Réessayer ✨</button>
+          </div>
+        )}
+        {!loading && !error && upcomingEvents.length > 0 && (
           <div className="z-10 w-full max-w-md mt-16 mb-8">
             <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-200 mb-6 flex items-center gap-2">
               📆 Prochaines dates

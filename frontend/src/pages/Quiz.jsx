@@ -14,28 +14,32 @@ const Quiz = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [score, setScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
 
+  const fetchQuestions = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const response = await authenticatedFetch('/api/quiz/questions');
+      const json = await response.json();
+      const data = Array.isArray(json) ? json : json.data || [];
+      
+      if (data.length > 0) {
+        setQuestions(data);
+        setTotalQuestions(data.length);
+      }
+    } catch (error) {
+      console.error('Erreur chargement questions:', error);
+      setError('Impossible de charger les questions');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Charger les questions depuis l'API
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const response = await authenticatedFetch('/api/quiz/questions');
-        const json = await response.json();
-        const data = Array.isArray(json) ? json : json.data || [];
-        
-        if (data.length > 0) {
-          setQuestions(data);
-          setTotalQuestions(data.length);
-        }
-      } catch (error) {
-        console.error('Erreur chargement questions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchQuestions();
   }, []);
 
@@ -106,6 +110,18 @@ const Quiz = () => {
       <PageTransition>
         <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center">
           <p className="mt-4 text-gray-600 font-['Playfair_Display']">Chargement des questions...</p>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center">
+          <p className="text-4xl mb-4">😿</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4 font-['Playfair_Display']">{error}</p>
+          <button onClick={fetchQuestions} className="px-5 py-2.5 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors font-['Playfair_Display']">Réessayer ✨</button>
         </div>
       </PageTransition>
     );

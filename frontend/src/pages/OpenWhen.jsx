@@ -9,23 +9,27 @@ import { authenticatedFetch } from '../Utils/api';
 const OpenWhen = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedEnvelope, setSelectedEnvelope] = useState(null);
   const [shakeId, setShakeId] = useState(null);
 
+  const fetchMessages = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const response = await authenticatedFetch('/api/messages');
+      const data = await response.json();
+      setMessages(Array.isArray(data) ? data : data.data || []);
+    } catch (error) {
+      console.error('Erreur chargement messages:', error);
+      setError('Impossible de charger les messages');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Charger les messages depuis l'API
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await authenticatedFetch('/api/messages');
-        const data = await response.json();
-        setMessages(Array.isArray(data) ? data : data.data || []);
-      } catch (error) {
-        console.error('Erreur chargement messages:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchMessages();
   }, []);
 
@@ -72,6 +76,20 @@ const OpenWhen = () => {
           <div className="text-center">
             <div className="text-4xl mb-4 animate-bounce">💌</div>
             <p className="text-gray-500 italic">Chargement de tes lettres...</p>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-stone-100 dark:bg-gray-900 flex items-center justify-center font-['Playfair_Display']">
+          <div className="text-center">
+            <p className="text-4xl mb-4">😿</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <button onClick={fetchMessages} className="px-5 py-2.5 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors">Réessayer ✨</button>
           </div>
         </div>
       </PageTransition>

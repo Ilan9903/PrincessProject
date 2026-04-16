@@ -9,22 +9,26 @@ import { authenticatedFetch } from '../Utils/api';
 const Coupons = () => {
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [flippedId, setFlippedId] = useState(null);
+
+  const fetchCoupons = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const response = await authenticatedFetch('/api/coupons');
+      const data = await response.json();
+      setCoupons(Array.isArray(data) ? data : data.data || []);
+    } catch (error) {
+      console.error('Erreur chargement coupons:', error);
+      setError('Impossible de charger les coupons');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Charger les coupons depuis l'API
   useEffect(() => {
-    const fetchCoupons = async () => {
-      try {
-        const response = await authenticatedFetch('/api/coupons');
-        const data = await response.json();
-        setCoupons(Array.isArray(data) ? data : data.data || []);
-      } catch (error) {
-        console.error('Erreur chargement coupons:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCoupons();
   }, []);
 
@@ -74,6 +78,34 @@ const Coupons = () => {
           <div className="text-center">
             <div className="text-4xl mb-4 animate-bounce">🎁</div>
             <p className="text-gray-500 dark:text-gray-400 italic">Chargement de tes cadeaux...</p>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex items-center justify-center font-['Playfair_Display'] transition-colors">
+          <div className="text-center">
+            <p className="text-4xl mb-4">😿</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <button onClick={fetchCoupons} className="px-5 py-2.5 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors">Réessayer ✨</button>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex items-center justify-center font-['Playfair_Display'] transition-colors">
+          <div className="text-center">
+            <p className="text-4xl mb-4">😿</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <button onClick={fetchCoupons} className="px-5 py-2.5 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors">Réessayer ✨</button>
           </div>
         </div>
       </PageTransition>

@@ -10,16 +10,20 @@ const Playlist = () => {
   const [songs, setSongs] = useState([]);
   const [filteredSongs, setFilteredSongs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
 
   const fetchSongs = useCallback(async () => {
+    setError(null);
+    setLoading(true);
     try {
       const response = await authenticatedFetch(`/api/playlist?sortBy=${sortBy}`);
       const data = await response.json();
       setSongs(Array.isArray(data) ? data : data.data || []);
     } catch (error) {
       console.error('Erreur chargement playlist:', error);
+      setError('Impossible de charger la playlist');
     } finally {
       setLoading(false);
     }
@@ -103,6 +107,18 @@ const Playlist = () => {
         <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center transition-colors">
           <div className="text-6xl animate-bounce">🎵</div>
           <p className="mt-4 text-gray-600 dark:text-gray-400 font-['Playfair_Display']">Chargement de la playlist...</p>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (error) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-pink-50 dark:bg-gray-900 flex flex-col items-center justify-center transition-colors">
+          <p className="text-4xl mb-4">😿</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4 font-['Playfair_Display']">{error}</p>
+          <button onClick={fetchSongs} className="px-5 py-2.5 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors font-['Playfair_Display']">Réessayer ✨</button>
         </div>
       </PageTransition>
     );
