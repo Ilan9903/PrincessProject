@@ -157,7 +157,9 @@ const Login = ({ onLogin }) => {
                 animate={shakeError ? { x: [-10, 10, -10, 10, 0] } : {}}
                 transition={{ duration: 0.4 }}
               >
+                <label htmlFor="login-email" className="sr-only">Adresse email</label>
                 <input
+                  id="login-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -170,7 +172,9 @@ const Login = ({ onLogin }) => {
               </motion.div>
 
               <div className="relative">
+                <label htmlFor="login-password" className="sr-only">Mot de passe</label>
                 <input
+                  id="login-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -182,6 +186,7 @@ const Login = ({ onLogin }) => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"
                 >
                   {showPassword ? '🙈' : '👁️'}
@@ -225,7 +230,9 @@ const Login = ({ onLogin }) => {
                 transition={{ duration: 0.4 }}
                 className="relative w-full flex justify-center"
               >
+                <label htmlFor="login-pin" className="sr-only">Code PIN à 4 chiffres</label>
                 <input
+                  id="login-pin"
                   type="tel"
                   inputMode="numeric"
                   pattern="[0-9]*"

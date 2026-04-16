@@ -11,6 +11,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      workbox: {
+        maximumFileSizeToCacheInBytes: 500 * 1024,
+        globPatterns: ['**/*.{js,css,html,webmanifest,png,svg,webp}'],
+      },
       manifest: {
         name: 'Princess Project',
         short_name: 'PrincessApp',
@@ -38,5 +42,15 @@ export default defineConfig({
   server: { 
     host: true,
     port: 1308, 
-  } 
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'framer-motion': ['framer-motion'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+  },
 })

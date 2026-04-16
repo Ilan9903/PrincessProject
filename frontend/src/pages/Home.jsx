@@ -4,7 +4,7 @@ import PageTransition from '../components/PageTransition';
 import FloatingHearts from '../components/FloatingHearts';
 import RelationshipCounter from '../components/RelationshipCounter';
 import { logout } from '../Utils/api';
-import babawa from '../assets/profile.jpg';
+import babawa from '../assets/profile.webp';
 
 const Home = () => {
 
@@ -40,7 +40,8 @@ const Home = () => {
 
         {/* Bouton de Déconnexion */}
         <button 
-          onClick={handleLogout} 
+          onClick={handleLogout}
+          aria-label="Se déconnecter"
           className="absolute top-6 left-6 text-gray-400 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400 z-50 p-2 text-2xl active:scale-95 shadow-xl border border-pink-100 dark:border-gray-700 rounded-full hover:shadow-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm transition-all hover:cursor-pointer"
         >
           🔒
@@ -61,6 +62,10 @@ const Home = () => {
                     <img
                       src={babawa}
                       alt="Ma princesse" 
+                      width="64"
+                      height="64"
+                      loading="eager"
+                      fetchPriority="high"
                       className="relative w-16 h-16 rounded-full object-cover border-[3px] border-white shadow-sm z-10 transition-transform duration-500 group-hover:scale-105"
                     />
                 </div>

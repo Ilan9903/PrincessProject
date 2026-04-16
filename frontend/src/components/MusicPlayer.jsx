@@ -28,10 +28,12 @@ const MusicPlayer = () => {
   return (
     <div className="fixed bottom-4 right-4 z-90">
       
-      <audio ref={audioRef} src={songFile} loop />
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <audio ref={audioRef} src={songFile} loop preload="none" />
 
       <motion.button
         onClick={togglePlay}
+        aria-label={isPlaying ? 'Mettre la musique en pause' : 'Jouer la musique'}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         className={`relative w-14 h-14 flex items-center justify-center rounded-full shadow-xl border-4 border-gray-700 dark:border-gray-600 transition-all duration-500 ${isPlaying ? 'bg-pink-500 dark:bg-pink-600' : 'bg-gray-800 dark:bg-gray-700'}`}

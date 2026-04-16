@@ -49,6 +49,7 @@ const InstallPrompt = () => {
           </div>
           <button
             onClick={() => setDismissed(true)}
+            aria-label="Fermer la notification d'installation"
             className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-bold px-2 transition-colors"
           >
             ✕

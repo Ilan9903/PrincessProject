@@ -1,31 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react'; // <--- Import pour la PWA
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 import { isAuthenticated } from './Utils/api';
 
-// --- COMPOSANTS ---
+// --- COMPOSANTS (chargés immédiatement) ---
 import ScrollToTop from './components/ScrollToTop';
-import MusicPlayer from './components/MusicPlayer'; // ✅ Le lecteur audio
-import InstallPrompt from './components/InstallPrompt'; // ✅ Le composant d'invite d'installation
-import ThemeToggle from './components/ThemeToggle'; // 🌙 Toggle dark mode
+import MusicPlayer from './components/MusicPlayer';
+import InstallPrompt from './components/InstallPrompt';
+import ThemeToggle from './components/ThemeToggle';
 import ErrorBoundary from './components/ErrorBoundary';
 
-// --- PAGES ---
-import Login from './pages/Login';
-import Home from './pages/Home';
-import ValentineRequest from './pages/Valentine-request'; // J'ai remis le nom standard si ton fichier s'appelle Valentine.jsx
-import ValentineSuccess from './pages/Valentine-success';          // Idem pour Success.jsx
-import DateIdeas from './pages/DateIdeas';
-import OpenWhen from './pages/OpenWhen';
-import OurStory from './pages/OurStory';
-import Reasons from './pages/Reasons';
-import Coupons from './pages/Coupons';
-import Wheel from './pages/Wheel';
-import Quiz from './pages/Quiz';
-import ScratchGame from './pages/ScratchGame';
-import Playlist from './pages/Playlist';
+// --- PAGES (lazy loading → code splitting automatique) ---
+const Login = lazy(() => import('./pages/Login'));
+const Home = lazy(() => import('./pages/Home'));
+const ValentineRequest = lazy(() => import('./pages/Valentine-request'));
+const ValentineSuccess = lazy(() => import('./pages/Valentine-success'));
+const DateIdeas = lazy(() => import('./pages/DateIdeas'));
+const OpenWhen = lazy(() => import('./pages/OpenWhen'));
+const OurStory = lazy(() => import('./pages/OurStory'));
+const Reasons = lazy(() => import('./pages/Reasons'));
+const Coupons = lazy(() => import('./pages/Coupons'));
+const Wheel = lazy(() => import('./pages/Wheel'));
+const Quiz = lazy(() => import('./pages/Quiz'));
+const ScratchGame = lazy(() => import('./pages/ScratchGame'));
+const Playlist = lazy(() => import('./pages/Playlist'));
+
+// --- Fallback de chargement ---
+const PageLoader = () => (
+  <div className="fixed inset-0 bg-linear-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-pink-500 mx-auto mb-3"></div>
+      <p className="text-gray-500 dark:text-gray-400 text-sm">Chargement...</p>
+    </div>
+  </div>
+);
 
 // --- GESTION DES ROUTES ANIMÉES ---
 // Ce composant s'occupe de gérer les transitions entre pages
@@ -36,7 +46,8 @@ const AnimatedRoutes = () => {
     // mode="wait" : attend que la page sorte avant de faire entrer la nouvelle
     <AnimatePresence mode="wait">
       <ErrorBoundary key={location.pathname}>
-        <Routes location={location} key={location.pathname}>
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/valentine" element={<ValentineRequest />} />
         <Route path="/success" element={<ValentineSuccess />} />
@@ -53,6 +64,7 @@ const AnimatedRoutes = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
+        </Suspense>
       </ErrorBoundary>
     </AnimatePresence>
   );
@@ -120,13 +132,15 @@ function App() {
           {!isAuth ? (
             
             // --- ÉCRAN DE LOGIN ---
-            <motion.div 
-              key="login"
-              exit={{ opacity: 0, y: -50, transition: { duration: 0.5 } }} // Animation de sortie vers le haut
-              className="fixed inset-0 z-50"
-            >
-              <Login onLogin={handleLogin} />
-            </motion.div>
+            <Suspense fallback={<PageLoader />}>
+              <motion.div 
+                key="login"
+                exit={{ opacity: 0, y: -50, transition: { duration: 0.5 } }}
+                className="fixed inset-0 z-50"
+              >
+                <Login onLogin={handleLogin} />
+              </motion.div>
+            </Suspense>
 
           ) : (
 
