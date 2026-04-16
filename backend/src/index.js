@@ -19,7 +19,8 @@ app.set('trust proxy', 1);
 // 🔍 DEBUG : Vérifier les variables d'environnement au démarrage
 console.log('✅ .env chargé');
 console.log('🌍 NODE_ENV:', process.env.NODE_ENV || 'development (par défaut)');
-console.log(' JWT_SECRET:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Manquant');
+console.log('🔐 APP_PASSWORD:', process.env.APP_PASSWORD ? '✓ Défini' : '✗ Manquant');
+console.log('🔑 JWT_SECRET:', process.env.JWT_SECRET ? '✓ Défini' : '✗ Manquant');
 console.log('🔥 FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? '✓ Défini' : '✗ Manquant');
 console.log('🌐 FRONTEND_URL:', process.env.FRONTEND_URL || 'http://localhost:1308');
 
@@ -192,8 +193,9 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-// Démarrage du serveur
-const server = app.listen(PORT, () => {
+// Démarrage du serveur (seulement si pas en mode test)
+if (process.env.NODE_ENV !== 'test') {
+  const server = app.listen(PORT, () => {
   logger.info('🚀 Serveur démarré', {
     port: PORT,
     env: process.env.NODE_ENV || 'development',
@@ -209,23 +211,24 @@ const server = app.listen(PORT, () => {
   console.log(`🔐 Environnement       : ${process.env.NODE_ENV || 'development'}`);
   console.log(`⏰ Démarré à           : ${new Date().toLocaleString('fr-FR')}`);
   console.log('='.repeat(60) + '\n');
-});
-
-// Gestion de l'arrêt gracieux
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM reçu, arrêt du serveur');
-  server.close(() => {
-    logger.info('Serveur arrêté');
-    process.exit(0);
   });
-});
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT reçu (Ctrl+C), arrêt du serveur');
-  server.close(() => {
-    logger.info('Serveur arrêté');
-    process.exit(0);
+  // Gestion de l'arrêt gracieux
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM reçu, arrêt du serveur');
+    server.close(() => {
+      logger.info('Serveur arrêté');
+      process.exit(0);
+    });
   });
-});
+
+  process.on('SIGINT', () => {
+    logger.info('SIGINT reçu (Ctrl+C), arrêt du serveur');
+    server.close(() => {
+      logger.info('Serveur arrêté');
+      process.exit(0);
+    });
+  });
+}
 
 export default app;
