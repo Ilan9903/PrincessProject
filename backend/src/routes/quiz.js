@@ -1,43 +1,11 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
-import { validate } from '../middleware/validate.js';
-import Joi from 'joi';
+import { validate, quizSchema, answerSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
-
-// Schéma de validation pour créer/modifier une question
-const quizSchema = Joi.object({
-  question: Joi.string().required().messages({
-    'string.empty': 'La question est requise',
-    'any.required': 'La question est requise'
-  }),
-  options: Joi.array().items(Joi.string()).min(2).max(6).required().messages({
-    'array.min': 'Au moins 2 options sont requises',
-    'array.max': 'Maximum 6 options',
-    'any.required': 'Les options sont requises'
-  }),
-  correctAnswer: Joi.string().required().messages({
-    'string.empty': 'La réponse correcte est requise',
-    'any.required': 'La réponse correcte est requise'
-  }),
-  category: Joi.string().valid('favorites', 'memories', 'fun', 'romantic', 'other').default('fun'),
-  difficulty: Joi.string().valid('easy', 'medium', 'hard').default('medium')
-});
-
-// Schéma pour répondre à une question
-const answerSchema = Joi.object({
-  questionId: Joi.string().required().messages({
-    'string.empty': 'L\'ID de la question est requis',
-    'any.required': 'L\'ID de la question est requis'
-  }),
-  selectedAnswer: Joi.string().required().messages({
-    'string.empty': 'La réponse sélectionnée est requise',
-    'any.required': 'La réponse sélectionnée est requise'
-  })
-});
 
 /**
  * @swagger

@@ -1,23 +1,11 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
-import { validate } from '../middleware/validate.js';
-import Joi from 'joi';
+import { validate, couponSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
-
-// Schéma de validation pour créer/modifier un coupon
-const couponSchema = Joi.object({
-  title: Joi.string().required().messages({
-    'string.empty': 'Le titre est requis',
-    'any.required': 'Le titre est requis'
-  }),
-  description: Joi.string().allow('').optional(),
-  type: Joi.string().valid('massage', 'restaurant', 'cinema', 'experience', 'other').default('experience'),
-  expirationDate: Joi.string().isoDate().optional().allow(null, '')
-});
 
 /**
  * @swagger

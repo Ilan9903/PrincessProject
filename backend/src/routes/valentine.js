@@ -1,29 +1,11 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
-import { validate } from '../middleware/validate.js';
-import Joi from 'joi';
+import { validate, valentineSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
-
-// Schéma de validation
-const valentineSchema = Joi.object({
-  title: Joi.string().required().messages({
-    'string.empty': 'Le titre est requis',
-    'any.required': 'Le titre est requis'
-  }),
-  description: Joi.string().required().messages({
-    'string.empty': 'La description est requise',
-    'any.required': 'La description est requise'
-  }),
-  date: Joi.string().required().messages({
-    'string.empty': 'La date est requise',
-    'any.required': 'La date est requise'
-  }),
-  imageUrl: Joi.string().uri().allow('').optional()
-});
 
 /**
  * @swagger

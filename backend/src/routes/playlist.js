@@ -1,29 +1,11 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
-import { validate } from '../middleware/validate.js';
-import Joi from 'joi';
+import { validate, playlistSchema } from '../middleware/validate.js';
 import { getDb } from '../config/firebase.js';
 import admin from '../config/firebase.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
-
-// Schéma de validation
-const playlistSchema = Joi.object({
-  title: Joi.string().required().messages({
-    'string.empty': 'Le titre est requis',
-    'any.required': 'Le titre est requis'
-  }),
-  artist: Joi.string().required().messages({
-    'string.empty': 'L\'artiste est requis',
-    'any.required': 'L\'artiste est requis'
-  }),
-  album: Joi.string().allow('').optional(),
-  platform: Joi.string().valid('spotify', 'youtube', 'apple_music', 'other').default('spotify'),
-  url: Joi.string().uri().allow('').optional(),
-  addedBy: Joi.string().valid('me', 'princess', 'both').default('me'),
-  reason: Joi.string().allow('').optional()
-});
 
 /**
  * @swagger
